@@ -20,6 +20,19 @@ archived:
 - 不涉及：`lab-kel-writer`（Clacko）的任何代码与配置。
 - 不做：未经确认不跑 Actions 构建、不提交审核。
 
+## 表情包输出规范
+
+导出表情时按平台要求生成：
+
+| 类型 | 格式 | 尺寸 | 体积 |
+|------|------|------|------|
+| 动态表情 | GIF | 240×240 | 超过 500KB 会被压缩 |
+| 静态表情 | JPG、PNG 或 GIF | 240×240 | 超过 500KB 会被压缩 |
+
+- 动态表情只能输出 GIF。
+- 静态表情三种格式都可，导出时按内容选择。
+- 尺寸统一 240×240，不输出其他尺寸。
+
 ## 现状
 
 - 脚手架已落在仓库根目录：Expo SDK 58 + RN 0.88 + Expo Router + TypeScript strict，依赖已装，`tsc --noEmit` 与 `expo-doctor` 通过。
@@ -32,3 +45,4 @@ archived:
 
 - 2026-11-17 建 project；定下 bundle id `lol.milio.sticker`，其余待填。
 - 2026-11-17 参考 `lab-kel-writer` 初始化 Expo 脚手架：SDK 58、expo-router（`src/app/`）、`@/*` 路径别名、开发版独立 bundle id `lol.milio.sticker.dev`、EAS profile、README 与本地开发约定。
+- 2026-11-17 记下表情包输出规范：动态 GIF、静态 JPG/PNG/GIF，统一 240×240，超过 500KB 会被平台压缩。
