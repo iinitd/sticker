@@ -58,13 +58,14 @@ jobs:
       - name: Build dev client IPA
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          BUILD_MESSAGE: ${{ inputs.message || github.ref_name }}
         run: |
           npx eas-cli@latest build \
             --local \
             --platform ios \
             --profile development \
             --non-interactive \
-            --message "${{ inputs.message }}" \
+            --message "$BUILD_MESSAGE" \
             --output build/StickerDev.ipa
 
       - name: Upload IPA artifact
