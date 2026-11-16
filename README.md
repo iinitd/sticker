@@ -46,9 +46,10 @@ eas.json            EAS 构建 profile
 ## 配置说明
 
 - **开发版与 TestFlight 版共存**：EAS 的 `development` profile 设置 `APP_VARIANT=dev`，`app.config.js` 据此改用 `lol.milio.sticker.dev` 和 `Sticker Dev`。
-- **EAS**：`eas.json` 已复制 Clacko 的 profile 结构（development / preview / production / simulator）。`extra.eas.projectId` 尚未写入，首次执行 `eas init` 时补上。
+- **EAS**：`eas.json` 已复制 Clacko 的 profile 结构（development / preview / production / simulator）。EAS project id 已写入 `app.json`；签名凭据按需在 `eas credentials` 里配置。
 - **图标与启动图**：目前是 Expo 模板占位图，产品名与视觉定下来后替换 `assets/`。
-- **CI**：GitHub Actions 构建与 TestFlight 发布尚未接入，等签名凭据和 EAS project id 就绪。
+- **CI**：`.github/workflows/ios-dev-client.yml` 在 `macos-26` 上跑 `eas build --local`，产物传到 Actions artifact，同时发布到 gh-pages 的 `dev/` 安装页。推 `dev-*` tag 或在 Actions 页面手动运行即可。需要仓库 secret `EXPO_TOKEN`。
+- **TestFlight**：发布流程尚未接入，等 App Store Connect 记录和提交凭据就绪。
 
 ## 参考
 

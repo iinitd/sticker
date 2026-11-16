@@ -36,7 +36,7 @@ archived:
 ## 现状
 
 - 脚手架已落在仓库根目录：Expo SDK 58 + RN 0.88 + Expo Router + TypeScript strict，依赖已装，`tsc --noEmit` 与 `expo-doctor` 通过。
-- 仓库是本地 git 仓库，还没有远端；EAS project id、签名凭据、GitHub Actions 未接。
+- 仓库是本地 git 仓库，已推送到 `git@github.com:iinitd/sticker.git`（public）；EAS project id 已写入，签名凭据待确认。
 - 证书可复用 Clacko 那张（同一开发者团队 `CH854588A4`），但每个 bundle id 需要单独的 provisioning profile。
 - 本机 Xcode 16.4 编不了 SDK 58，本地原生构建走不通；构建交给 GitHub Actions 的 `eas build --local`。
 - 产品形态（做什么、叫什么）待定。当前名称 `Sticker`、slug `sticker`、scheme `sticker` 都是占位，图标沿用 Expo 模板图；名字定下来后要一起改 `app.json`、`app.config.js` 和商店页文案。
@@ -46,3 +46,4 @@ archived:
 - 2026-11-17 建 project；定下 bundle id `lol.milio.sticker`，其余待填。
 - 2026-11-17 参考 `lab-kel-writer` 初始化 Expo 脚手架：SDK 58、expo-router（`src/app/`）、`@/*` 路径别名、开发版独立 bundle id `lol.milio.sticker.dev`、EAS profile、README 与本地开发约定。
 - 2026-11-17 记下表情包输出规范：动态 GIF、静态 JPG/PNG/GIF，统一 240×240，超过 500KB 会被平台压缩。
+- 2026-11-17 接上 GitHub 远端 `iinitd/sticker`，补 dev client 的 Actions 工作流（`macos-26` + `eas build --local` + gh-pages 安装页）和发布脚本。
