@@ -10,7 +10,10 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import StickerVision from "@modules/sticker-vision";
+import StickerVision, {
+  type StickerRenderResult,
+} from "@modules/sticker-vision";
+import type { StickerRenderOptions } from "@/sticker/options";
 import { THEME } from "@/theme";
 
 type PointSegmentPickerProps = {
@@ -18,6 +21,8 @@ type PointSegmentPickerProps = {
   imageUri: string | null;
   width: number;
   height: number;
+  options: StickerRenderOptions;
+  onApplied: (result: StickerRenderResult) => void;
   onClose: () => void;
 };
 
@@ -26,10 +31,14 @@ export function PointSegmentPicker({
   imageUri,
   width,
   height,
+  options,
+  onApplied,
   onClose,
 }: PointSegmentPickerProps) {
   const [maskUri, setMaskUri] = useState<string | null>(null);
+  const [point, setPoint] = useState<{ x: number; y: number } | null>(null);
   const [loading, setLoading] = useState(false);
+  const [applying, setApplying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [stageWidth, setStageWidth] = useState(0);
   const [stageHeight, setStageHeight] = useState(0);
@@ -39,6 +48,12 @@ export function PointSegmentPicker({
       return;
     }
 
+    const nextPoint = {
+      x: locationX / stageWidth,
+      y: locationY / stageHeight,
+    };
+
+    setPoint(nextPoint);
     setLoading(true);
     setError(null);
     setMaskUri(null);
@@ -46,8 +61,8 @@ export function PointSegmentPicker({
     try {
       const result = await StickerVision.segmentAtPointAsync(
         imageUri,
-        locationX / stageWidth,
-        locationY / stageHeight,
+        nextPoint.x,
+        nextPoint.y,
       );
       setMaskUri(result.uri);
     } catch (cause) {
@@ -58,6 +73,32 @@ export function PointSegmentPicker({
       );
     } finally {
       setLoading(false);
+    }
+  };
+
+  const applyPoint = async () => {
+    if (!imageUri || !point || applying) {
+      return;
+    }
+
+    setApplying(true);
+    setError(null);
+
+    try {
+      const result = await StickerVision.applyPointAsync(
+        imageUri,
+        point.x,
+        point.y,
+        options,
+      );
+      onApplied(result);
+      onClose();
+    } catch (cause) {
+      setError(
+        cause instanceof Error ? cause.message : "应用选区失败，再试一次。",
+      );
+    } finally {
+      setApplying(false);
     }
   };
 
@@ -128,6 +169,21 @@ export function PointSegmentPicker({
           ) : (
             <Text style={styles.hint}>先选一张照片。</Text>
           )}
+
+          {maskUri ? (
+            <Pressable
+              disabled={applying}
+              onPress={applyPoint}
+              style={[
+                styles.applyButton,
+                applying ? styles.applyButtonDisabled : null,
+              ]}
+            >
+              <Text style={styles.applyText}>
+                {applying ? "正在应用到贴纸…" : "应用到贴纸"}
+              </Text>
+            </Pressable>
+          ) : null}
 
           {error ? (
             <View style={styles.errorBox}>
@@ -245,5 +301,21 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 19,
     color: THEME.colors.textSecondary,
+  },
+  applyButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: THEME.spacing.md + 2,
+    borderRadius: THEME.radii.lg,
+    backgroundColor: THEME.colors.accent,
+  },
+  applyButtonDisabled: {
+    opacity: 0.5,
+  },
+  applyText: {
+    fontFamily: THEME.fonts.sans,
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#ffffff",
   },
 });

@@ -60,7 +60,7 @@ export default function Index() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [renderMode, setRenderMode] = useState<
-    "person" | "general" | "general-fallback" | null
+    "person" | "general" | "general-fallback" | "point" | null
   >(null);
   const [options, setOptions] = useState<StickerRenderOptions>({
     ...STICKER_RENDER_OPTIONS,
@@ -478,7 +478,9 @@ export default function Index() {
                   ? "本次：人物模式"
                   : renderMode === "general-fallback"
                     ? "人物模式未识别人体，已回退通用"
-                    : "本次：通用模式"}
+                    : renderMode === "point"
+                      ? "本次：点选补图"
+                      : "本次：通用模式"}
               </Text>
             ) : null}
 
@@ -558,6 +560,13 @@ export default function Index() {
         imageUri={originalUri}
         width={sourceSize?.width ?? 0}
         height={sourceSize?.height ?? 0}
+        options={optionsRef.current}
+        onApplied={(result) => {
+          setStickerUri(result.uri);
+          setRenderMode(result.mode);
+          setShowOriginal(false);
+          setPointPickerVisible(false);
+        }}
         onClose={() => setPointPickerVisible(false)}
       />
     </SafeAreaView>

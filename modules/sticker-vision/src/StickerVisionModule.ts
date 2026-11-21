@@ -4,7 +4,7 @@ import type { StickerRenderOptions } from "@/sticker/options";
 
 export type StickerRenderResult = {
   uri: string;
-  mode: "person" | "general" | "general-fallback";
+  mode: "person" | "general" | "general-fallback" | "point";
 };
 
 export type PointMaskResult = {
@@ -24,6 +24,13 @@ declare class StickerVisionModule extends NativeModule<{}> {
     x: number,
     y: number,
   ): Promise<PointMaskResult>;
+
+  applyPointAsync(
+    uri: string,
+    x: number,
+    y: number,
+    options: StickerRenderOptions,
+  ): Promise<StickerRenderResult>;
 }
 
 export default requireNativeModule<StickerVisionModule>("StickerVision");

@@ -15,7 +15,7 @@ struct PointMaskResult: Record {
   @Field var height: Double = 0
 }
 
-struct StickerOptions: Record {
+struct StickerOptions: Record, @unchecked Sendable {
   @Field var outputSize: Int = 1024
   @Field var maxDimension: Int = 1600
   @Field var borderWidthRatio: Double = 0
@@ -91,41 +91,60 @@ public class StickerVisionModule: Module {
         }
       }
     }
+
+    AsyncFunction("applyPointAsync") { (uri: String, x: Double, y: Double, options: StickerOptions, promise: Promise) in
+      Task {
+        do {
+          guard #available(iOS 27.0, *) else {
+            throw Exception(name: "UnsupportedOS", description: "点选分割需要 iOS 27。")
+          }
+
+          let result = try await Self.applyPoint(uri: uri, x: x, y: y, options: options)
+          promise.resolve(result)
+        } catch {
+          promise.reject("POINT_APPLY_FAILED", error.localizedDescription)
+        }
+      }
+    }
   }
 
   @available(iOS 17.0, *)
-  private static func makeSticker(
-    from image: UIImage,
+  private static func baseMask(
+    handler: VNImageRequestHandler,
+    extent: CGRect,
     options: StickerOptions
-  ) throws -> (image: UIImage, usedPerson: Bool)? {
+  ) throws -> (mask: CIImage, usedPerson: Bool)? {
+    if options.usePersonMatte, let personMask = Self.mainPersonMask(handler: handler, extent: extent) {
+      return (personMask, true)
+    }
+
+    let request = VNGenerateForegroundInstanceMaskRequest()
+    try handler.perform([request])
+
+    guard let result = request.results?.first else {
+      return nil
+    }
+
+    let maskBuffer = try result.generateScaledMaskForImage(
+      forInstances: result.allInstances,
+      from: handler
+    )
+
+    return (CIImage(cvPixelBuffer: maskBuffer), false)
+  }
+
+  @available(iOS 17.0, *)
+  private static func renderMaskedImage(
+    _ image: UIImage,
+    baseMask: CIImage,
+    options: StickerOptions
+  ) throws -> UIImage? {
     guard let cgImage = image.cgImage else {
       throw Exception(name: "InvalidImage", description: "无法读取图片像素。")
     }
 
-    let handler = VNImageRequestHandler(cgImage: cgImage, orientation: .up, options: [:])
     let extent = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
     let foreground = CIImage(cgImage: cgImage)
-    let baseMask: CIImage
-    var usedPerson = false
-
-    if options.usePersonMatte, let personMask = Self.mainPersonMask(handler: handler, extent: extent) {
-      baseMask = personMask
-      usedPerson = true
-    } else {
-      let request = VNGenerateForegroundInstanceMaskRequest()
-      try handler.perform([request])
-
-      guard let result = request.results?.first else {
-        return nil
-      }
-
-      let maskBuffer = try result.generateScaledMaskForImage(
-        forInstances: result.allInstances,
-        from: handler
-      )
-      baseMask = CIImage(cvPixelBuffer: maskBuffer)
-    }
-
     let minSide = min(extent.width, extent.height)
     let closeRadius = max(0, minSide * options.closeHoleRatio)
     let edgeGrow = minSide * options.edgeGrowRatio
@@ -133,7 +152,6 @@ public class StickerVisionModule: Module {
 
     var mask = baseMask
 
-    // Fill small holes left by the segmentation model.
     if closeRadius > 0.01 {
       mask = mask
         .clampedToExtent()
@@ -141,8 +159,6 @@ public class StickerVisionModule: Module {
         .applyingFilter("CIMorphologyMinimum", parameters: [kCIInputRadiusKey: closeRadius])
     }
 
-    // Grow or shrink the subject edge. A negative value removes the fringe of
-    // background-coloured pixels that the soft mask leaves behind.
     if abs(edgeGrow) > 0.01 {
       let filter = edgeGrow > 0 ? "CIMorphologyMaximum" : "CIMorphologyMinimum"
       mask = mask
@@ -178,25 +194,36 @@ public class StickerVisionModule: Module {
       return nil
     }
 
-    return (UIImage(cgImage: resultImage, scale: 1, orientation: .up), usedPerson)
+    return UIImage(cgImage: resultImage, scale: 1, orientation: .up)
+  }
+
+  @available(iOS 17.0, *)
+  private static func makeSticker(
+    from image: UIImage,
+    options: StickerOptions
+  ) throws -> (image: UIImage, usedPerson: Bool)? {
+    guard let cgImage = image.cgImage else {
+      throw Exception(name: "InvalidImage", description: "无法读取图片像素。")
+    }
+
+    let handler = VNImageRequestHandler(cgImage: cgImage, orientation: .up, options: [:])
+    let extent = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
+
+    guard let base = try Self.baseMask(handler: handler, extent: extent, options: options) else {
+      return nil
+    }
+
+    guard let rendered = try Self.renderMaskedImage(image, baseMask: base.mask, options: options) else {
+      return nil
+    }
+
+    return (rendered, base.usedPerson)
   }
 
   @available(iOS 27.0, *)
-  private static func segmentAtPoint(uri: String, x: Double, y: Double) async throws -> PointMaskResult {
-    guard let url = URL(string: uri), url.isFileURL else {
-      throw Exception(name: "InvalidImageURI", description: "图片地址无效。")
-    }
-
-    let data: Data
-    do {
-      data = try Data(contentsOf: url)
-    } catch {
-      throw Exception(name: "ImageReadFailed", description: "读取图片失败。")
-    }
-
-    guard let source = Self.downsample(data: data, maxDimension: 1600),
-          let cgImage = source.cgImage else {
-      throw Exception(name: "InvalidImage", description: "无法解析这张图片。")
+  private static func iterativeMask(from image: UIImage, x: Double, y: Double) async throws -> CIImage {
+    guard let cgImage = image.cgImage else {
+      throw Exception(name: "InvalidImage", description: "无法读取图片像素。")
     }
 
     let handler = ImageRequestHandler(cgImage, orientation: .up)
@@ -223,12 +250,34 @@ public class StickerVisionModule: Module {
 
     let extent = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
     let rawMask = CIImage(cgImage: try observation.cgImage)
-    let scaledMask = rawMask.transformed(
+    return rawMask.transformed(
       by: CGAffineTransform(
         scaleX: extent.width / rawMask.extent.width,
         y: extent.height / rawMask.extent.height
       )
     )
+  }
+
+  @available(iOS 27.0, *)
+  private static func segmentAtPoint(uri: String, x: Double, y: Double) async throws -> PointMaskResult {
+    guard let url = URL(string: uri), url.isFileURL else {
+      throw Exception(name: "InvalidImageURI", description: "图片地址无效。")
+    }
+
+    let data: Data
+    do {
+      data = try Data(contentsOf: url)
+    } catch {
+      throw Exception(name: "ImageReadFailed", description: "读取图片失败。")
+    }
+
+    guard let source = Self.downsample(data: data, maxDimension: 1600),
+          let cgImage = source.cgImage else {
+      throw Exception(name: "InvalidImage", description: "无法解析这张图片。")
+    }
+
+    let mask = try await Self.iterativeMask(from: source, x: x, y: y)
+    let extent = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
     let white = CIImage(color: CIColor.white).cropped(to: extent)
 
     guard let filter = CIFilter(name: "CIBlendWithMask") else {
@@ -237,7 +286,7 @@ public class StickerVisionModule: Module {
 
     filter.setValue(white, forKey: kCIInputImageKey)
     filter.setValue(CIImage.empty(), forKey: kCIInputBackgroundImageKey)
-    filter.setValue(scaledMask, forKey: kCIInputMaskImageKey)
+    filter.setValue(mask, forKey: kCIInputMaskImageKey)
 
     guard let output = filter.outputImage else {
       throw Exception(name: "MaskFailed", description: "生成选区失败。")
@@ -261,6 +310,63 @@ public class StickerVisionModule: Module {
       width: Double(cgImage.width),
       height: Double(cgImage.height)
     )
+  }
+
+  @available(iOS 27.0, *)
+  private static func applyPoint(
+    uri: String,
+    x: Double,
+    y: Double,
+    options: StickerOptions
+  ) async throws -> StickerResult {
+    guard let url = URL(string: uri), url.isFileURL else {
+      throw Exception(name: "InvalidImageURI", description: "图片地址无效。")
+    }
+
+    let data: Data
+    do {
+      data = try Data(contentsOf: url)
+    } catch {
+      throw Exception(name: "ImageReadFailed", description: "读取图片失败。")
+    }
+
+    guard let source = Self.downsample(data: data, maxDimension: 1600),
+          let cgImage = source.cgImage else {
+      throw Exception(name: "InvalidImage", description: "无法解析这张图片。")
+    }
+
+    let handler = VNImageRequestHandler(cgImage: cgImage, orientation: .up, options: [:])
+    let extent = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
+
+    guard let base = try Self.baseMask(handler: handler, extent: extent, options: options) else {
+      throw Exception(name: "NoSubject", description: "没有识别到主体，换一张照片试试。")
+    }
+
+    let pointMask = try await Self.iterativeMask(from: source, x: x, y: y)
+    guard let union = CIFilter(name: "CIMaximumCompositing") else {
+      throw Exception(name: "MaskFailed", description: "合并选区失败。")
+    }
+
+    union.setValue(base.mask, forKey: kCIInputImageKey)
+    union.setValue(pointMask, forKey: kCIInputBackgroundImageKey)
+    let combined = (union.outputImage ?? base.mask).cropped(to: extent)
+
+    guard let rendered = try Self.renderMaskedImage(source, baseMask: combined, options: options) else {
+      throw Exception(name: "RenderFailed", description: "生成贴纸失败。")
+    }
+
+    let side = CGFloat(max(240, min(options.outputSize, 2048)))
+    let square = Self.fitIntoSquare(rendered, side: side, insetRatio: options.insetRatio)
+
+    guard let png = square.pngData() else {
+      throw Exception(name: "EncodingFailed", description: "生成 PNG 失败。")
+    }
+
+    let outputURL = FileManager.default.temporaryDirectory
+      .appendingPathComponent("sticker-\(UUID().uuidString).png")
+    try png.write(to: outputURL)
+
+    return StickerResult(uri: outputURL.absoluteString, mode: "point")
   }
 
   private static func mainPersonMask(handler: VNImageRequestHandler, extent: CGRect) -> CIImage? {
