@@ -42,6 +42,23 @@
     "plugins": [
       "expo-router",
       [
+        "expo-camera",
+        {
+          "cameraPermission": "Sticker 需要使用相机拍摄贴纸素材。",
+          "microphonePermission": "Sticker 需要使用麦克风录制动态贴纸。",
+          "recordAudioAndroid": true
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Sticker 需要访问相册读取照片。",
+          "savePhotosPermission": "Sticker 需要把贴纸保存到相册。",
+          "isAccessMediaLocationEnabled": false
+        }
+      ],
+      "expo-sharing",
+      [
         "expo-image-picker",
         {
           "photosPermission": "Sticker 需要访问照片，用来把照片做成贴纸。"

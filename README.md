@@ -73,7 +73,9 @@ eas.json                EAS 构建 profile
 
 「抠图」在通用和人物之间切换：人物模式走 `VNGeneratePersonSegmentationRequest`，优先保留完整人体和手，适合人像；手里拿的东西可能被排除。
 
-「点选」走 iOS 27 的 `GenerateIterativeSegmentationRequest`：在照片上点一下目标，系统按对象边缘返回蒙版。第一次使用需要联网下载系统分割模型，之后离线。当前只显示选中区域，还没和主抠图合并、也没接导出；构建需要 Xcode 27。
+「点选」走 iOS 27 的 `GenerateIterativeSegmentationRequest`：在照片上点一下目标，系统按对象边缘返回蒙版。第一次使用需要联网下载系统分割模型，之后离线。构建需要 Xcode 27。
+
+原生批次还预置了这些能力，交互后续再定：多点/加减点合并（`applyPointsAsync`）、240 导出（`exportStickerAsync`）、视频取帧（`videoFramesAsync`）、GIF 编码（`encodeGifAsync`）。相机、保存到相册、分享分别用 `expo-camera`、`expo-media-library`、`expo-sharing`，图片处理全在本地。
 
 ## 配置说明
 

@@ -3,10 +3,35 @@ import UIKit
 import Vision
 import CoreImage
 import ImageIO
+import AVFoundation
+import UniformTypeIdentifiers
 
 struct StickerResult: Record {
   @Field var uri: String = ""
   @Field var mode: String = "general"
+}
+
+struct PointInput: Record, @unchecked Sendable {
+  @Field var x: Double = 0
+  @Field var y: Double = 0
+  @Field var include: Bool = true
+}
+
+struct FileResult: Record {
+  @Field var uri: String = ""
+  @Field var bytes: Int = 0
+}
+
+struct GifResult: Record {
+  @Field var uri: String = ""
+  @Field var bytes: Int = 0
+  @Field var width: Int = 0
+  @Field var height: Int = 0
+  @Field var frames: Int = 0
+}
+
+struct VideoFramesResult: Record {
+  @Field var frames: [String] = []
 }
 
 struct PointMaskResult: Record {
@@ -125,6 +150,59 @@ public class StickerVisionModule: Module, @unchecked Sendable {
         }
       }
     }
+
+    AsyncFunction("applyPointsAsync") { (uri: String, points: [PointInput], options: StickerOptions, promise: Promise) in
+      Task {
+        do {
+          guard #available(iOS 27.0, *) else {
+            throw Exception(name: "UnsupportedOS", description: "点选分割需要 iOS 27。")
+          }
+
+          let onProgress: @Sendable (Double) -> Void = { [weak self] value in
+            self?.sendEvent("onPointModelDownloadProgress", ["progress": value])
+          }
+          let result = try await Self.applyPoints(
+            uri: uri,
+            points: points,
+            options: options,
+            onProgress: onProgress
+          )
+          promise.resolve(result)
+        } catch {
+          promise.reject("POINT_APPLY_FAILED", error.localizedDescription)
+        }
+      }
+    }
+
+    AsyncFunction("exportStickerAsync") { (uri: String, size: Int, format: String, promise: Promise) in
+      do {
+        promise.resolve(try Self.exportSticker(uri: uri, size: size, format: format))
+      } catch {
+        promise.reject("EXPORT_FAILED", error.localizedDescription)
+      }
+    }
+
+    AsyncFunction("videoFramesAsync") { (uri: String, fps: Double, maxFrames: Int, promise: Promise) in
+      Task {
+        do {
+          guard #available(iOS 16.0, *) else {
+            throw Exception(name: "UnsupportedOS", description: "视频取帧需要 iOS 16。")
+          }
+          let result = try await Self.videoFrames(uri: uri, fps: fps, maxFrames: maxFrames)
+          promise.resolve(result)
+        } catch {
+          promise.reject("VIDEO_FRAMES_FAILED", error.localizedDescription)
+        }
+      }
+    }
+
+    AsyncFunction("encodeGifAsync") { (frameUris: [String], fps: Double, size: Int, promise: Promise) in
+      do {
+        promise.resolve(try Self.encodeGif(frameUris: frameUris, fps: fps, size: size))
+      } catch {
+        promise.reject("GIF_FAILED", error.localizedDescription)
+      }
+    }
   }
 
   @available(iOS 17.0, *)
@@ -239,11 +317,17 @@ public class StickerVisionModule: Module, @unchecked Sendable {
     return (rendered, base.usedPerson)
   }
 
+  private static func normalizedPoint(_ point: PointInput) -> NormalizedPoint {
+    NormalizedPoint(
+      x: CGFloat(min(max(point.x, 0), 1)),
+      y: CGFloat(1 - min(max(point.y, 0), 1))
+    )
+  }
+
   @available(iOS 27.0, *)
   private static func iterativeMask(
     from image: UIImage,
-    x: Double,
-    y: Double,
+    points: [PointInput],
     onProgress: (@Sendable (Double) -> Void)? = nil
   ) async throws -> CIImage {
     guard let cgImage = image.cgImage else {
@@ -251,11 +335,21 @@ public class StickerVisionModule: Module, @unchecked Sendable {
     }
 
     let handler = ImageRequestHandler(cgImage, orientation: .up)
-    let point = NormalizedPoint(
-      x: CGFloat(min(max(x, 0), 1)),
-      y: CGFloat(1 - min(max(y, 0), 1))
+    guard let seedIndex = points.firstIndex(where: { $0.include }) else {
+      throw Exception(name: "InvalidPoints", description: "至少需要一个包含点。")
+    }
+    let request = GenerateIterativeSegmentationRequest(
+      seedPoint: Self.normalizedPoint(points[seedIndex])
     )
-    let request = GenerateIterativeSegmentationRequest(seedPoint: point)
+
+    for (index, point) in points.enumerated() where index != seedIndex {
+      let normalized = Self.normalizedPoint(point)
+      if point.include {
+        try request.addIncludedPoint(normalized)
+      } else {
+        try request.addExcludedPoint(normalized)
+      }
+    }
 
     switch await request.assetStatus {
     case .ready:
@@ -326,8 +420,7 @@ public class StickerVisionModule: Module, @unchecked Sendable {
 
     let mask = try await Self.iterativeMask(
       from: source,
-      x: x,
-      y: y,
+      points: [PointInput(x: x, y: y, include: true)],
       onProgress: onProgress
     )
     let extent = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
@@ -373,6 +466,21 @@ public class StickerVisionModule: Module, @unchecked Sendable {
     options: StickerOptions,
     onProgress: (@Sendable (Double) -> Void)? = nil
   ) async throws -> StickerResult {
+    try await Self.applyPoints(
+      uri: uri,
+      points: [PointInput(x: x, y: y, include: true)],
+      options: options,
+      onProgress: onProgress
+    )
+  }
+
+  @available(iOS 27.0, *)
+  private static func applyPoints(
+    uri: String,
+    points: [PointInput],
+    options: StickerOptions,
+    onProgress: (@Sendable (Double) -> Void)? = nil
+  ) async throws -> StickerResult {
     guard let url = URL(string: uri), url.isFileURL else {
       throw Exception(name: "InvalidImageURI", description: "图片地址无效。")
     }
@@ -398,8 +506,7 @@ public class StickerVisionModule: Module, @unchecked Sendable {
 
     let pointMask = try await Self.iterativeMask(
       from: source,
-      x: x,
-      y: y,
+      points: points,
       onProgress: onProgress
     )
     guard let union = CIFilter(name: "CIMaximumCompositing") else {
@@ -426,6 +533,177 @@ public class StickerVisionModule: Module, @unchecked Sendable {
     try png.write(to: outputURL)
 
     return StickerResult(uri: outputURL.absoluteString, mode: "point")
+  }
+
+  private static func resizedCGImage(_ image: CGImage, side: Int, opaque: Bool) -> CGImage? {
+    let target = CGFloat(max(24, min(side, 2048)))
+    let format = UIGraphicsImageRendererFormat.default()
+    format.scale = 1
+    format.opaque = opaque
+
+    return UIGraphicsImageRenderer(
+      size: CGSize(width: target, height: target),
+      format: format
+    ).image { context in
+      if opaque {
+        UIColor.white.setFill()
+        context.cgContext.fill(CGRect(x: 0, y: 0, width: target, height: target))
+      }
+
+      let imageSize = CGSize(width: image.width, height: image.height)
+      let ratio = min(target / imageSize.width, target / imageSize.height)
+      let drawSize = CGSize(
+        width: imageSize.width * ratio,
+        height: imageSize.height * ratio
+      )
+      let origin = CGPoint(
+        x: (target - drawSize.width) / 2,
+        y: (target - drawSize.height) / 2
+      )
+      UIImage(cgImage: image).draw(in: CGRect(origin: origin, size: drawSize))
+    }.cgImage
+  }
+
+  private static func exportSticker(uri: String, size: Int, format: String) throws -> FileResult {
+    guard let url = URL(string: uri), url.isFileURL,
+          let image = UIImage(contentsOfFile: url.path),
+          let cgImage = image.cgImage else {
+      throw Exception(name: "InvalidImage", description: "无法读取贴纸图片。")
+    }
+
+    let isJpeg = format.lowercased() == "jpg" || format.lowercased() == "jpeg"
+    guard let resized = Self.resizedCGImage(cgImage, side: size, opaque: isJpeg) else {
+      throw Exception(name: "ResizeFailed", description: "缩放贴纸失败。")
+    }
+
+    let outputImage = UIImage(cgImage: resized)
+    let data: Data?
+    let ext: String
+    if isJpeg {
+      data = outputImage.jpegData(compressionQuality: 0.9)
+      ext = "jpg"
+    } else {
+      data = outputImage.pngData()
+      ext = "png"
+    }
+
+    guard let data else {
+      throw Exception(name: "EncodingFailed", description: "导出图片失败。")
+    }
+
+    let outputURL = FileManager.default.temporaryDirectory
+      .appendingPathComponent("sticker-export-\(UUID().uuidString).\(ext)")
+    try data.write(to: outputURL)
+
+    return FileResult(uri: outputURL.absoluteString, bytes: data.count)
+  }
+
+  @available(iOS 16.0, *)
+  private static func videoFrames(
+    uri: String,
+    fps: Double,
+    maxFrames: Int
+  ) async throws -> VideoFramesResult {
+    guard let url = URL(string: uri), url.isFileURL else {
+      throw Exception(name: "InvalidVideoURI", description: "视频地址无效。")
+    }
+
+    let asset = AVURLAsset(url: url)
+    let duration = try await asset.load(.duration)
+    let seconds = CMTimeGetSeconds(duration)
+    guard seconds.isFinite, seconds > 0 else {
+      throw Exception(name: "InvalidVideo", description: "视频时长无效。")
+    }
+
+    let frameRate = min(max(fps, 1), 30)
+    let limit = min(max(maxFrames, 1), 120)
+    let count = min(limit, max(1, Int(seconds * frameRate)))
+    let generator = AVAssetImageGenerator(asset: asset)
+    generator.appliesPreferredTrackTransform = true
+    generator.requestedTimeToleranceBefore = .zero
+    generator.requestedTimeToleranceAfter = .zero
+
+    var frames: [String] = []
+    for index in 0..<count {
+      let time = CMTime(
+        seconds: min(seconds - 0.01, Double(index) / frameRate),
+        preferredTimescale: 600
+      )
+      let result = try await generator.image(at: time)
+      guard let png = UIImage(cgImage: result.image).pngData() else {
+        continue
+      }
+      let outputURL = FileManager.default.temporaryDirectory
+        .appendingPathComponent("frame-\(UUID().uuidString)-\(index).png")
+      try png.write(to: outputURL)
+      frames.append(outputURL.absoluteString)
+    }
+
+    return VideoFramesResult(frames: frames)
+  }
+
+  private static func encodeGif(
+    frameUris: [String],
+    fps: Double,
+    size: Int
+  ) throws -> GifResult {
+    guard !frameUris.isEmpty else {
+      throw Exception(name: "NoFrames", description: "没有可编码的帧。")
+    }
+
+    let frameRate = min(max(fps, 1), 20)
+    let side = max(24, min(size, 1024))
+    let outputURL = FileManager.default.temporaryDirectory
+      .appendingPathComponent("sticker-\(UUID().uuidString).gif")
+
+    guard let destination = CGImageDestinationCreateWithURL(
+      outputURL as CFURL,
+      UTType.gif.identifier as CFString,
+      frameUris.count,
+      nil
+    ) else {
+      throw Exception(name: "GifCreateFailed", description: "创建 GIF 失败。")
+    }
+
+    let fileProperties = [
+      kCGImagePropertyGIFDictionary: [
+        kCGImagePropertyGIFLoopCount: 0
+      ]
+    ] as CFDictionary
+    CGImageDestinationSetProperties(destination, fileProperties)
+
+    let frameProperties = [
+      kCGImagePropertyGIFDictionary: [
+        kCGImagePropertyGIFDelayTime: 1.0 / frameRate
+      ]
+    ] as CFDictionary
+
+    var count = 0
+    for uri in frameUris {
+      guard let url = URL(string: uri), url.isFileURL,
+            let image = UIImage(contentsOfFile: url.path),
+            let cgImage = image.cgImage,
+            let resized = Self.resizedCGImage(cgImage, side: side, opaque: false) else {
+        continue
+      }
+      CGImageDestinationAddImage(destination, resized, frameProperties)
+      count += 1
+    }
+
+    guard count > 0, CGImageDestinationFinalize(destination) else {
+      throw Exception(name: "GifWriteFailed", description: "写入 GIF 失败。")
+    }
+
+    let attributes = try FileManager.default.attributesOfItem(atPath: outputURL.path)
+    let bytes = (attributes[.size] as? NSNumber)?.intValue ?? 0
+
+    return GifResult(
+      uri: outputURL.absoluteString,
+      bytes: bytes,
+      width: side,
+      height: side,
+      frames: count
+    )
   }
 
   private static func mainPersonMask(handler: VNImageRequestHandler, extent: CGRect) -> CIImage? {
