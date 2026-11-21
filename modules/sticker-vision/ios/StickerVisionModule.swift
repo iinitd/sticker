@@ -222,7 +222,7 @@ public class StickerVisionModule: Module {
     }
 
     let extent = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
-    let rawMask = CIImage(cgImage: observation.cgImage)
+    let rawMask = CIImage(cgImage: try observation.cgImage)
     let scaledMask = rawMask.transformed(
       by: CGAffineTransform(
         scaleX: extent.width / rawMask.extent.width,
