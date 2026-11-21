@@ -199,7 +199,7 @@ public class StickerVisionModule: Module {
       throw Exception(name: "InvalidImage", description: "无法解析这张图片。")
     }
 
-    let handler = ImageRequestHandler(cgImage: cgImage, orientation: .up)
+    let handler = ImageRequestHandler(cgImage, orientation: .up)
     let point = NormalizedPoint(
       x: CGFloat(min(max(x, 0), 1)),
       y: CGFloat(1 - min(max(y, 0), 1))
