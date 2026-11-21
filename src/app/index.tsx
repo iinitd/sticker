@@ -46,6 +46,9 @@ export default function Index() {
   const [showOriginal, setShowOriginal] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [renderMode, setRenderMode] = useState<
+    "person" | "general" | "general-fallback" | null
+  >(null);
   const [options, setOptions] = useState<StickerRenderOptions>({
     ...STICKER_RENDER_OPTIONS,
   });
@@ -64,7 +67,8 @@ export default function Index() {
         const result = await StickerVision.makeStickerAsync(uri, nextOptions);
 
         if (id === requestID.current) {
-          setStickerUri(result);
+          setStickerUri(result.uri);
+          setRenderMode(result.mode);
           setShowOriginal(false);
         }
       } catch (cause) {
@@ -101,6 +105,7 @@ export default function Index() {
     const asset = result.assets[0];
     setOriginalUri(asset.uri);
     setStickerUri(null);
+    setRenderMode(null);
     setShowOriginal(false);
     await renderSticker(asset.uri, optionsRef.current);
   }, [renderSticker]);
@@ -280,6 +285,16 @@ export default function Index() {
                 </Pressable>
               </View>
             </View>
+
+            {renderMode ? (
+              <Text style={styles.renderMode}>
+                {renderMode === "person"
+                  ? "本次：人物模式"
+                  : renderMode === "general-fallback"
+                    ? "人物模式未识别人体，已回退通用"
+                    : "本次：通用模式"}
+              </Text>
+            ) : null}
 
             <ParameterSlider
               label="边缘收放"
@@ -553,6 +568,11 @@ const styles = StyleSheet.create({
     fontFamily: THEME.fonts.sans,
     fontSize: 11,
     lineHeight: 16,
+    color: THEME.colors.textMuted,
+  },
+  renderMode: {
+    fontFamily: THEME.fonts.mono,
+    fontSize: 11,
     color: THEME.colors.textMuted,
   },
   errorBox: {

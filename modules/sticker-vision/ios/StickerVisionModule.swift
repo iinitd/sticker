@@ -4,6 +4,11 @@ import Vision
 import CoreImage
 import ImageIO
 
+struct StickerResult: Record {
+  @Field var uri: String
+  @Field var mode: String
+}
+
 struct StickerOptions: Record {
   @Field var outputSize: Int = 1024
   @Field var maxDimension: Int = 1600
@@ -18,7 +23,7 @@ public class StickerVisionModule: Module {
   public func definition() -> ModuleDefinition {
     Name("StickerVision")
 
-    AsyncFunction("makeStickerAsync") { (uri: String, options: StickerOptions) throws -> String in
+    AsyncFunction("makeStickerAsync") { (uri: String, options: StickerOptions) throws -> StickerResult in
       guard let url = URL(string: uri), url.isFileURL else {
         throw Exception(name: "InvalidImageURI", description: "图片地址无效。")
       }
@@ -39,12 +44,12 @@ public class StickerVisionModule: Module {
         throw Exception(name: "InvalidImage", description: "无法解析这张图片。")
       }
 
-      guard let cutout = try Self.makeSticker(from: source, options: options) else {
+      guard let rendered = try Self.makeSticker(from: source, options: options) else {
         throw Exception(name: "NoSubject", description: "没有识别到可以抠出的主体，换一张试试。")
       }
 
       let side = CGFloat(max(240, min(options.outputSize, 2048)))
-      let square = Self.fitIntoSquare(cutout, side: side, insetRatio: options.insetRatio)
+      let square = Self.fitIntoSquare(rendered.image, side: side, insetRatio: options.insetRatio)
 
       guard let png = square.pngData() else {
         throw Exception(name: "EncodingFailed", description: "生成 PNG 失败。")
@@ -59,12 +64,19 @@ public class StickerVisionModule: Module {
         throw Exception(name: "WriteFailed", description: "保存结果失败。")
       }
 
-      return outputURL.absoluteString
+      let mode = rendered.usedPerson
+        ? "person"
+        : (options.usePersonMatte ? "general-fallback" : "general")
+
+      return StickerResult(uri: outputURL.absoluteString, mode: mode)
     }
   }
 
   @available(iOS 17.0, *)
-  private static func makeSticker(from image: UIImage, options: StickerOptions) throws -> UIImage? {
+  private static func makeSticker(
+    from image: UIImage,
+    options: StickerOptions
+  ) throws -> (image: UIImage, usedPerson: Bool)? {
     guard let cgImage = image.cgImage else {
       throw Exception(name: "InvalidImage", description: "无法读取图片像素。")
     }
@@ -73,9 +85,11 @@ public class StickerVisionModule: Module {
     let extent = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
     let foreground = CIImage(cgImage: cgImage)
     let baseMask: CIImage
+    var usedPerson = false
 
     if options.usePersonMatte, let personMask = Self.mainPersonMask(handler: handler, extent: extent) {
       baseMask = personMask
+      usedPerson = true
     } else {
       let request = VNGenerateForegroundInstanceMaskRequest()
       try handler.perform([request])
@@ -143,38 +157,31 @@ public class StickerVisionModule: Module {
       return nil
     }
 
-    return UIImage(cgImage: resultImage, scale: 1, orientation: .up)
+    return (UIImage(cgImage: resultImage, scale: 1, orientation: .up), usedPerson)
   }
 
   private static func mainPersonMask(handler: VNImageRequestHandler, extent: CGRect) -> CIImage? {
     let humanRequest = VNDetectHumanRectanglesRequest()
     humanRequest.upperBodyOnly = false
+    let humans = (try? handler.perform([humanRequest])) != nil ? humanRequest.results : nil
 
-    do {
-      try handler.perform([humanRequest])
-    } catch {
-      return nil
+    var crop: CGRect?
+    if let humans, !humans.isEmpty {
+      let main = humans.max { lhs, rhs in
+        let left = lhs.boundingBox.width * lhs.boundingBox.height
+        let right = rhs.boundingBox.width * rhs.boundingBox.height
+        return left < right
+      }!
+      let box = main.boundingBox
+      crop = CGRect(
+        x: box.minX * extent.width,
+        y: box.minY * extent.height,
+        width: box.width * extent.width,
+        height: box.height * extent.height
+      )
+      .insetBy(dx: -box.width * extent.width * 0.6, dy: -box.height * extent.height * 0.6)
+      .intersection(extent)
     }
-
-    guard let humans = humanRequest.results, !humans.isEmpty else {
-      return nil
-    }
-
-    let main = humans.max { lhs, rhs in
-      let left = lhs.boundingBox.width * lhs.boundingBox.height
-      let right = rhs.boundingBox.width * rhs.boundingBox.height
-      return left < right
-    }!
-
-    let box = main.boundingBox
-    let padded = CGRect(
-      x: box.minX * extent.width,
-      y: box.minY * extent.height,
-      width: box.width * extent.width,
-      height: box.height * extent.height
-    )
-    .insetBy(dx: -box.width * extent.width * 0.2, dy: -box.height * extent.height * 0.2)
-    .intersection(extent)
 
     let personRequest = VNGeneratePersonSegmentationRequest()
     personRequest.qualityLevel = .accurate
@@ -201,7 +208,7 @@ public class StickerVisionModule: Module {
         y: extent.height / raw.extent.height
       )
     )
-    let cropped = scaled.cropped(to: padded)
+    let cropped = crop.map { scaled.cropped(to: $0) } ?? scaled
     let black = CIImage(color: CIColor.black).cropped(to: extent)
     return cropped.composited(over: black)
   }

@@ -6,7 +6,7 @@ class StickerVisionModule extends NativeModule<{}> {
   async makeStickerAsync(
     _uri: string,
     _options: StickerRenderOptions,
-  ): Promise<string> {
+  ): Promise<{ uri: string; mode: "person" | "general" | "general-fallback" }> {
     throw new Error("图片转贴纸目前只支持 iOS 真机。");
   }
 }
