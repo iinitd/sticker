@@ -61,3 +61,4 @@ archived:
 - 2026-11-21 原生能力批次：`applyPointsAsync`（多点/加减点合并）、`exportStickerAsync`（240 PNG/JPG）、`videoFramesAsync`（视频取帧）、`encodeGifAsync`（GIF 编码）；依赖加 `expo-camera`、`expo-media-library`、`expo-sharing`，权限写进 `app.json`。交互后续在 JS 里定。
 - 网络边界：App 不接后端、不做账号、不上传图片；唯一网络请求是 iOS 27 Vision 首次下载 Apple 系统分割模型。ICP 走离线工具豁免申请，不批再补个人备案。
 - 2026-11-22 移除「人物模式」UI：实测对补手没有帮助，主流程收敛为“通用自动抠图 + 点选补充/排除”。`VNGeneratePersonSegmentationRequest` 分支保留在原生模块里但不再暴露。
+- 2026-11-22 点选改为魔法棒式：自动抠图作为初始区域显示，点已选区域取消，点空白新增；新增 `baseMaskAsync` 暴露自动蒙版，`applyPointsAsync` 支持 `includeBase`，可以只输出点选区域。

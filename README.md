@@ -65,6 +65,7 @@ eas.json                EAS 构建 profile
 | `edgeGrowRatio` | 主体边缘扩张/收缩，负值向内收 | -0.0007 |
 | `closeHoleRatio` | 闭运算半径，补小洞 | 0.0025 |
 | `insetRatio` | 正方形内留白比例 | 0.03 |
+| `includeBase` | 应用时是否带上自动抠图底图 | true |
 
 改这些值只需要 JS 热更新，不用重新打包；只有改 Swift 方法签名或处理流程才需要重新构建。
 
@@ -72,7 +73,7 @@ eas.json                EAS 构建 profile
 
 默认走通用前景抠图，点选作为补充。人物模式已从 UI 移除；原生人物分支保留但不再暴露。
 
-「点选」走 iOS 27 的 `GenerateIterativeSegmentationRequest`：在照片上点一下目标，系统按对象边缘返回蒙版。第一次使用需要联网下载系统分割模型，之后离线。构建需要 Xcode 27。
+「点选」走 iOS 27 的 `GenerateIterativeSegmentationRequest`：打开时自动抠图作为底图区域一起显示，可以点它取消；点空白处新增区域，点已选区域取消。第一次使用需要联网下载系统分割模型，之后离线。构建需要 Xcode 27。
 
 原生批次还预置了这些能力，交互后续再定：多点/加减点合并（`applyPointsAsync`）、240 导出（`exportStickerAsync`）、视频取帧（`videoFramesAsync`）、GIF 编码（`encodeGifAsync`）。相机、保存到相册、分享分别用 `expo-camera`、`expo-media-library`、`expo-sharing`，图片处理全在本地。
 

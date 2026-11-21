@@ -48,6 +48,7 @@ struct StickerOptions: Record, @unchecked Sendable {
   @Field var closeHoleRatio: Double = 0
   @Field var insetRatio: Double = 0
   @Field var usePersonMatte: Bool = false
+  @Field var includeBase: Bool = true
 }
 
 public class StickerVisionModule: Module, @unchecked Sendable {
@@ -170,6 +171,20 @@ public class StickerVisionModule: Module, @unchecked Sendable {
           promise.resolve(result)
         } catch {
           promise.reject("POINT_APPLY_FAILED", error.localizedDescription)
+        }
+      }
+    }
+
+    AsyncFunction("baseMaskAsync") { (uri: String, options: StickerOptions, promise: Promise) in
+      Task {
+        do {
+          guard #available(iOS 17.0, *) else {
+            throw Exception(name: "UnsupportedOS", description: "自动抠图需要 iOS 17。")
+          }
+          let result = try Self.baseMaskPreview(uri: uri, options: options)
+          promise.resolve(result)
+        } catch {
+          promise.reject("BASE_MASK_FAILED", error.localizedDescription)
         }
       }
     }
@@ -501,22 +516,41 @@ public class StickerVisionModule: Module, @unchecked Sendable {
     let handler = VNImageRequestHandler(cgImage: cgImage, orientation: .up, options: [:])
     let extent = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
 
-    guard let base = try Self.baseMask(handler: handler, extent: extent, options: options) else {
+    let base: (mask: CIImage, usedPerson: Bool)? =
+      options.includeBase
+        ? try Self.baseMask(handler: handler, extent: extent, options: options)
+        : nil
+
+    if options.includeBase && base == nil {
       throw Exception(name: "NoSubject", description: "没有识别到主体，换一张照片试试。")
     }
-
-    let pointMask = try await Self.iterativeMask(
-      from: source,
-      points: points,
-      onProgress: onProgress
-    )
-    guard let union = CIFilter(name: "CIMaximumCompositing") else {
-      throw Exception(name: "MaskFailed", description: "合并选区失败。")
+    if !options.includeBase && points.isEmpty {
+      throw Exception(name: "NoSelection", description: "至少选中一个区域。")
     }
 
-    union.setValue(base.mask, forKey: kCIInputImageKey)
-    union.setValue(pointMask, forKey: kCIInputBackgroundImageKey)
-    let combined = (union.outputImage ?? base.mask).cropped(to: extent)
+    let pointMask: CIImage? = points.isEmpty
+      ? nil
+      : try await Self.iterativeMask(
+          from: source,
+          points: points,
+          onProgress: onProgress
+        )
+
+    let combined: CIImage
+    if let base, let pointMask {
+      guard let union = CIFilter(name: "CIMaximumCompositing") else {
+        throw Exception(name: "MaskFailed", description: "合并选区失败。")
+      }
+      union.setValue(base.mask, forKey: kCIInputImageKey)
+      union.setValue(pointMask, forKey: kCIInputBackgroundImageKey)
+      combined = (union.outputImage ?? base.mask).cropped(to: extent)
+    } else if let base {
+      combined = base.mask
+    } else if let pointMask {
+      combined = pointMask
+    } else {
+      throw Exception(name: "NoSelection", description: "至少选中一个区域。")
+    }
 
     guard let rendered = try Self.renderMaskedImage(source, baseMask: combined, options: options) else {
       throw Exception(name: "RenderFailed", description: "生成贴纸失败。")
@@ -534,6 +568,61 @@ public class StickerVisionModule: Module, @unchecked Sendable {
     try png.write(to: outputURL)
 
     return StickerResult(uri: outputURL.absoluteString, mode: "point")
+  }
+
+  @available(iOS 17.0, *)
+  private static func baseMaskPreview(uri: String, options: StickerOptions) throws -> PointMaskResult {
+    guard let url = URL(string: uri), url.isFileURL else {
+      throw Exception(name: "InvalidImageURI", description: "图片地址无效。")
+    }
+
+    let data: Data
+    do {
+      data = try Data(contentsOf: url)
+    } catch {
+      throw Exception(name: "ImageReadFailed", description: "读取图片失败。")
+    }
+
+    guard let source = Self.downsample(data: data, maxDimension: 1600),
+          let cgImage = source.cgImage else {
+      throw Exception(name: "InvalidImage", description: "无法解析这张图片。")
+    }
+
+    let handler = VNImageRequestHandler(cgImage: cgImage, orientation: .up, options: [:])
+    let extent = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
+
+    guard let base = try Self.baseMask(handler: handler, extent: extent, options: options) else {
+      throw Exception(name: "NoSubject", description: "没有识别到自动抠图区域。")
+    }
+
+    let white = CIImage(color: CIColor.white).cropped(to: extent)
+    guard let filter = CIFilter(name: "CIBlendWithMask") else {
+      throw Exception(name: "FilterUnavailable", description: "系统抠图滤镜不可用。")
+    }
+
+    filter.setValue(white, forKey: kCIInputImageKey)
+    filter.setValue(CIImage.empty(), forKey: kCIInputBackgroundImageKey)
+    filter.setValue(base.mask, forKey: kCIInputMaskImageKey)
+
+    guard let output = filter.outputImage else {
+      throw Exception(name: "MaskFailed", description: "生成自动蒙版失败。")
+    }
+
+    let context = CIContext(options: [.useSoftwareRenderer: false])
+    guard let rendered = context.createCGImage(output, from: extent),
+          let png = UIImage(cgImage: rendered).pngData() else {
+      throw Exception(name: "EncodingFailed", description: "生成自动蒙版图片失败。")
+    }
+
+    let outputURL = FileManager.default.temporaryDirectory
+      .appendingPathComponent("base-mask-\(UUID().uuidString).png")
+    try png.write(to: outputURL)
+
+    return PointMaskResult(
+      uri: outputURL.absoluteString,
+      width: Double(cgImage.width),
+      height: Double(cgImage.height)
+    )
   }
 
   private static func resizedCGImage(_ image: CGImage, side: Int, opaque: Bool) -> CGImage? {

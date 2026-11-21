@@ -34,6 +34,7 @@ type SelectedRegion = {
   y: number;
   maskUri: string;
   hitMap: Uint8Array;
+  isBase?: boolean;
 };
 
 const HIT_SIZE = 128;
@@ -90,6 +91,7 @@ export function PointSegmentPicker({
 }: PointSegmentPickerProps) {
   const [regions, setRegions] = useState<SelectedRegion[]>([]);
   const [loading, setLoading] = useState(false);
+  const [baseLoading, setBaseLoading] = useState(false);
   const [applying, setApplying] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -108,12 +110,67 @@ export function PointSegmentPicker({
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
     setRegions([]);
     setError(null);
+
+    if (!imageUri) {
+      setBaseLoading(false);
+      return;
+    }
+
+    setBaseLoading(true);
+
+    (async () => {
+      try {
+        const result = await StickerVision.baseMaskAsync(imageUri, options);
+        let hitMap: Uint8Array<ArrayBufferLike> = new Uint8Array(0);
+        try {
+          hitMap = await buildHitMap(result.uri);
+        } catch {
+          // The base mask can still be shown; it just cannot be toggled off.
+        }
+
+        if (!cancelled) {
+          setRegions([
+            {
+              id: "base",
+              x: 0,
+              y: 0,
+              maskUri: result.uri,
+              hitMap,
+              isBase: true,
+            },
+          ]);
+        }
+      } catch (cause) {
+        if (!cancelled) {
+          setError(
+            cause instanceof Error
+              ? cause.message
+              : "自动抠图蒙版读取失败，可以直接点选。",
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setBaseLoading(false);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [imageUri]);
 
   const addRegion = async (locationX: number, locationY: number) => {
-    if (!imageUri || stageWidth <= 0 || stageHeight <= 0 || loading) {
+    if (
+      !imageUri ||
+      stageWidth <= 0 ||
+      stageHeight <= 0 ||
+      loading ||
+      baseLoading
+    ) {
       return;
     }
 
@@ -175,7 +232,7 @@ export function PointSegmentPicker({
   };
 
   const removeRegion = (id: string) => {
-    if (loading || applying) {
+    if (loading || applying || baseLoading) {
       return;
     }
 
@@ -183,7 +240,7 @@ export function PointSegmentPicker({
   };
 
   const applyRegions = async () => {
-    if (!imageUri || regions.length === 0 || applying) {
+    if (!imageUri || regions.length === 0 || applying || baseLoading) {
       return;
     }
 
@@ -191,28 +248,26 @@ export function PointSegmentPicker({
     setError(null);
 
     try {
-      const points = regions.map((region) => ({
+      const pointRegions = regions.filter((region) => !region.isBase);
+      const includeBase = regions.some((region) => region.isBase);
+      const points = pointRegions.map((region) => ({
         x: region.x,
         y: region.y,
         include: true,
       }));
 
-      if (
-        regions.length > 1 &&
-        typeof StickerVision.applyPointsAsync !== "function"
-      ) {
-        throw new Error("多点应用需要安装最新开发包。");
+      if (!includeBase && points.length === 0) {
+        throw new Error("至少选中一个区域。");
       }
 
-      const result =
-        typeof StickerVision.applyPointsAsync === "function"
-          ? await StickerVision.applyPointsAsync(imageUri, points, options)
-          : await StickerVision.applyPointAsync(
-              imageUri,
-              points[0].x,
-              points[0].y,
-              options,
-            );
+      if (typeof StickerVision.applyPointsAsync !== "function") {
+        throw new Error("点选应用需要安装最新开发包。");
+      }
+
+      const result = await StickerVision.applyPointsAsync(imageUri, points, {
+        ...options,
+        includeBase,
+      });
 
       onApplied(result);
       onClose();
@@ -274,7 +329,7 @@ export function PointSegmentPicker({
               ))}
 
               <Pressable
-                disabled={loading || applying}
+                disabled={loading || applying || baseLoading}
                 onPress={(event) =>
                   addRegion(
                     event.nativeEvent.locationX,
@@ -319,6 +374,13 @@ export function PointSegmentPicker({
                   )}
                 </View>
               ) : null}
+
+              {baseLoading ? (
+                <View style={styles.busyOverlay}>
+                  <ActivityIndicator color={THEME.colors.accent} />
+                  <Text style={styles.busyText}>正在读取自动抠图…</Text>
+                </View>
+              ) : null}
             </View>
           ) : (
             <Text style={styles.hint}>先选一张照片。</Text>
@@ -328,6 +390,9 @@ export function PointSegmentPicker({
             <View style={styles.summaryRow}>
               <Text style={styles.summaryText}>
                 已选 {regions.length} 个区域
+                {regions.some((region) => region.isBase)
+                  ? "（含自动底图）"
+                  : ""}
               </Text>
               <Pressable
                 hitSlop={8}
@@ -361,7 +426,7 @@ export function PointSegmentPicker({
           ) : null}
 
           <Text style={styles.hint}>
-            点一下选中一个区域；再点同一个区域取消。第一次使用需要联网下载系统模型，之后离线。
+            打开时自动抠图已经选中；点它取消，点空白处新增，再点已选区域取消。第一次使用需要联网下载系统模型，之后离线。
           </Text>
         </View>
       </SafeAreaView>

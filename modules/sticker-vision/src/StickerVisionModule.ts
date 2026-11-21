@@ -65,6 +65,11 @@ declare class StickerVisionModule extends NativeModule<StickerVisionEvents> {
     options: StickerRenderOptions,
   ): Promise<StickerRenderResult>;
 
+  baseMaskAsync(
+    uri: string,
+    options: StickerRenderOptions,
+  ): Promise<PointMaskResult>;
+
   exportStickerAsync(
     uri: string,
     size: number,

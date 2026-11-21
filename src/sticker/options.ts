@@ -17,6 +17,8 @@ export const STICKER_RENDER_OPTIONS = {
   closeHoleRatio: 0.0025,
   // Transparent padding around the sticker inside the square.
   insetRatio: 0.03,
+  // Whether the automatic cutout is part of the point-selection set.
+  includeBase: true,
 } as const;
 
 export type StickerRenderOptions = {
@@ -26,4 +28,5 @@ export type StickerRenderOptions = {
   edgeGrowRatio?: number;
   closeHoleRatio?: number;
   insetRatio?: number;
+  includeBase?: boolean;
 };

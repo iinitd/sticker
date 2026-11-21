@@ -21,6 +21,13 @@ class StickerVisionModule extends NativeModule<{}> {
     throw new Error("点选分割需要 iOS 27 真机。");
   }
 
+  async baseMaskAsync(
+    _uri: string,
+    _options: StickerRenderOptions,
+  ): Promise<{ uri: string; width: number; height: number }> {
+    throw new Error("自动蒙版需要 iOS 真机。");
+  }
+
   async applyPointAsync(
     _uri: string,
     _x: number,
