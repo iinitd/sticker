@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -12,7 +12,11 @@ import * as ImagePicker from "expo-image-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import StickerVision from "@modules/sticker-vision";
-import { STICKER_RENDER_OPTIONS } from "@/sticker/options";
+import { ParameterSlider } from "@/components/ParameterSlider";
+import {
+  STICKER_RENDER_OPTIONS,
+  type StickerRenderOptions,
+} from "@/sticker/options";
 import { THEME } from "@/theme";
 
 const CHECKER_CELLS = Array.from({ length: 100 }, (_, index) => index);
@@ -42,6 +46,43 @@ export default function Index() {
   const [showOriginal, setShowOriginal] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [options, setOptions] = useState<StickerRenderOptions>({
+    ...STICKER_RENDER_OPTIONS,
+  });
+  const optionsRef = useRef(options);
+  const requestID = useRef(0);
+
+  const renderSticker = useCallback(
+    async (uri: string, nextOptions: StickerRenderOptions) => {
+      const id = requestID.current + 1;
+      requestID.current = id;
+
+      setBusy(true);
+      setError(null);
+
+      try {
+        const result = await StickerVision.makeStickerAsync(uri, nextOptions);
+
+        if (id === requestID.current) {
+          setStickerUri(result);
+          setShowOriginal(false);
+        }
+      } catch (cause) {
+        if (id === requestID.current) {
+          setError(
+            cause instanceof Error
+              ? cause.message
+              : "处理失败，换一张照片试试。",
+          );
+        }
+      } finally {
+        if (id === requestID.current) {
+          setBusy(false);
+        }
+      }
+    },
+    [],
+  );
 
   const pickImage = useCallback(async () => {
     setError(null);
@@ -61,21 +102,33 @@ export default function Index() {
     setOriginalUri(asset.uri);
     setStickerUri(null);
     setShowOriginal(false);
-    setBusy(true);
+    await renderSticker(asset.uri, optionsRef.current);
+  }, [renderSticker]);
 
-    try {
-      const uri = await StickerVision.makeStickerAsync(asset.uri, {
-        ...STICKER_RENDER_OPTIONS,
-      });
-      setStickerUri(uri);
-    } catch (cause) {
-      setError(
-        cause instanceof Error ? cause.message : "处理失败，换一张照片试试。",
-      );
-    } finally {
-      setBusy(false);
+  const updateOption = useCallback(
+    (key: keyof StickerRenderOptions, value: number) => {
+      const next = { ...optionsRef.current, [key]: value };
+      optionsRef.current = next;
+      setOptions(next);
+    },
+    [],
+  );
+
+  const commitOptions = useCallback(() => {
+    if (originalUri) {
+      void renderSticker(originalUri, optionsRef.current);
     }
-  }, []);
+  }, [originalUri, renderSticker]);
+
+  const resetOptions = useCallback(() => {
+    const defaults = { ...STICKER_RENDER_OPTIONS };
+    optionsRef.current = defaults;
+    setOptions(defaults);
+
+    if (originalUri) {
+      void renderSticker(originalUri, defaults);
+    }
+  }, [originalUri, renderSticker]);
 
   const visibleUri = showOriginal ? originalUri : stickerUri;
   const hasResult = stickerUri !== null;
@@ -152,6 +205,70 @@ export default function Index() {
                 原图
               </Text>
             </Pressable>
+          </View>
+        ) : null}
+
+        {hasResult ? (
+          <View style={styles.adjustPanel}>
+            <View style={styles.adjustHeader}>
+              <Text style={styles.adjustTitle}>微调</Text>
+              <Pressable
+                disabled={busy}
+                hitSlop={8}
+                onPress={resetOptions}
+              >
+                <Text
+                  style={[
+                    styles.reset,
+                    busy ? styles.resetDisabled : null,
+                  ]}
+                >
+                  重置
+                </Text>
+              </Pressable>
+            </View>
+
+            <ParameterSlider
+              label="边缘收放"
+              value={options.edgeGrowRatio ?? 0}
+              min={-0.006}
+              max={0.006}
+              step={0.0001}
+              formatValue={(value) =>
+                `${value >= 0 ? "+" : ""}${(value * 1000).toFixed(1)}px`
+              }
+              onChange={(value) => updateOption("edgeGrowRatio", value)}
+              onCommit={commitOptions}
+              disabled={busy}
+            />
+
+            <ParameterSlider
+              label="白边粗细"
+              value={options.borderWidthRatio ?? 0}
+              min={0}
+              max={0.04}
+              step={0.001}
+              formatValue={(value) => `${(value * 1000).toFixed(0)}px`}
+              onChange={(value) => updateOption("borderWidthRatio", value)}
+              onCommit={commitOptions}
+              disabled={busy}
+            />
+
+            <ParameterSlider
+              label="补洞"
+              value={options.closeHoleRatio ?? 0}
+              min={0}
+              max={0.008}
+              step={0.0005}
+              formatValue={(value) => `${(value * 1000).toFixed(1)}px`}
+              onChange={(value) => updateOption("closeHoleRatio", value)}
+              onCommit={commitOptions}
+              disabled={busy}
+            />
+
+            <Text style={styles.adjustHint}>
+              松手后重新生成，约 1 秒。数值按 1000px 参考边长的像素。
+            </Text>
           </View>
         ) : null}
 
@@ -316,6 +433,39 @@ const styles = StyleSheet.create({
   segmentTextActive: {
     color: THEME.colors.primary,
     fontWeight: "600",
+  },
+  adjustPanel: {
+    padding: THEME.spacing.lg,
+    borderRadius: THEME.radii.lg,
+    borderWidth: 1,
+    borderColor: THEME.colors.border,
+    backgroundColor: THEME.colors.backgroundSecondary,
+    gap: THEME.spacing.md,
+  },
+  adjustHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  adjustTitle: {
+    fontFamily: THEME.fonts.sans,
+    fontSize: 13,
+    fontWeight: "600",
+    color: THEME.colors.primary,
+  },
+  reset: {
+    fontFamily: THEME.fonts.sans,
+    fontSize: 13,
+    color: THEME.colors.accent,
+  },
+  resetDisabled: {
+    opacity: 0.4,
+  },
+  adjustHint: {
+    fontFamily: THEME.fonts.sans,
+    fontSize: 11,
+    lineHeight: 16,
+    color: THEME.colors.textMuted,
   },
   errorBox: {
     padding: THEME.spacing.md,

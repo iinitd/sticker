@@ -68,6 +68,8 @@ eas.json                EAS 构建 profile
 
 改这些值只需要 JS 热更新，不用重新打包；只有改 Swift 方法签名或处理流程才需要重新构建。
 
+首页的「微调」面板直接改 `edgeGrowRatio`、`borderWidthRatio`、`closeHoleRatio` 三项，松手后重新调用原生模块。边缘软化和局部框选重抠需要原生支持，还没做。
+
 ## 配置说明
 
 - **开发版与 TestFlight 版共存**：EAS 的 `development` profile 设置 `APP_VARIANT=dev`，`app.config.js` 据此改用 `lol.milio.sticker.dev` 和 `Sticker Dev`。
