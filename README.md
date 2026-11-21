@@ -65,10 +65,13 @@ eas.json                EAS 构建 profile
 | `edgeGrowRatio` | 主体边缘扩张/收缩，负值向内收 | -0.0007 |
 | `closeHoleRatio` | 闭运算半径，补小洞 | 0.0025 |
 | `insetRatio` | 正方形内留白比例 | 0.03 |
+| `usePersonMatte` | 改用人物蒙版，优先保留完整人体 | false |
 
 改这些值只需要 JS 热更新，不用重新打包；只有改 Swift 方法签名或处理流程才需要重新构建。
 
 首页的「微调」面板直接改 `edgeGrowRatio`、`borderWidthRatio`、`closeHoleRatio` 三项，松手后重新调用原生模块。边缘软化和局部框选重抠需要原生支持，还没做。
+
+「抠图」在通用和人物之间切换：人物模式走 `VNGeneratePersonSegmentationRequest`，优先保留完整人体和手，适合人像；手里拿的东西可能被排除。
 
 ## 配置说明
 

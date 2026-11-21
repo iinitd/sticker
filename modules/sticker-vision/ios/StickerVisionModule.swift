@@ -11,6 +11,7 @@ struct StickerOptions: Record {
   @Field var edgeGrowRatio: Double = 0
   @Field var closeHoleRatio: Double = 0
   @Field var insetRatio: Double = 0
+  @Field var usePersonMatte: Bool = false
 }
 
 public class StickerVisionModule: Module {
@@ -68,29 +69,34 @@ public class StickerVisionModule: Module {
       throw Exception(name: "InvalidImage", description: "无法读取图片像素。")
     }
 
-    let request = VNGenerateForegroundInstanceMaskRequest()
     let handler = VNImageRequestHandler(cgImage: cgImage, orientation: .up, options: [:])
-    try handler.perform([request])
-
-    guard let result = request.results?.first else {
-      return nil
-    }
-
-    let maskBuffer = try result.generateScaledMaskForImage(
-      forInstances: result.allInstances,
-      from: handler
-    )
-
     let extent = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
     let foreground = CIImage(cgImage: cgImage)
-    let rawMask = CIImage(cvPixelBuffer: maskBuffer)
-    let minSide = min(extent.width, extent.height)
+    let baseMask: CIImage
 
+    if options.usePersonMatte, let personMask = Self.mainPersonMask(handler: handler, extent: extent) {
+      baseMask = personMask
+    } else {
+      let request = VNGenerateForegroundInstanceMaskRequest()
+      try handler.perform([request])
+
+      guard let result = request.results?.first else {
+        return nil
+      }
+
+      let maskBuffer = try result.generateScaledMaskForImage(
+        forInstances: result.allInstances,
+        from: handler
+      )
+      baseMask = CIImage(cvPixelBuffer: maskBuffer)
+    }
+
+    let minSide = min(extent.width, extent.height)
     let closeRadius = max(0, minSide * options.closeHoleRatio)
     let edgeGrow = minSide * options.edgeGrowRatio
     let borderWidth = max(0, minSide * options.borderWidthRatio)
 
-    var mask = rawMask
+    var mask = baseMask
 
     // Fill small holes left by the segmentation model.
     if closeRadius > 0.01 {
@@ -138,6 +144,66 @@ public class StickerVisionModule: Module {
     }
 
     return UIImage(cgImage: resultImage, scale: 1, orientation: .up)
+  }
+
+  private static func mainPersonMask(handler: VNImageRequestHandler, extent: CGRect) -> CIImage? {
+    let humanRequest = VNDetectHumanRectanglesRequest()
+    humanRequest.upperBodyOnly = false
+
+    do {
+      try handler.perform([humanRequest])
+    } catch {
+      return nil
+    }
+
+    guard let humans = humanRequest.results, !humans.isEmpty else {
+      return nil
+    }
+
+    let main = humans.max { lhs, rhs in
+      let left = lhs.boundingBox.width * lhs.boundingBox.height
+      let right = rhs.boundingBox.width * rhs.boundingBox.height
+      return left < right
+    }!
+
+    let box = main.boundingBox
+    let padded = CGRect(
+      x: box.minX * extent.width,
+      y: box.minY * extent.height,
+      width: box.width * extent.width,
+      height: box.height * extent.height
+    )
+    .insetBy(dx: -box.width * extent.width * 0.2, dy: -box.height * extent.height * 0.2)
+    .intersection(extent)
+
+    let personRequest = VNGeneratePersonSegmentationRequest()
+    personRequest.qualityLevel = .accurate
+    personRequest.outputPixelFormat = kCVPixelFormatType_OneComponent8
+
+    do {
+      try handler.perform([personRequest])
+    } catch {
+      return nil
+    }
+
+    guard let observation = personRequest.results?.first else {
+      return nil
+    }
+
+    let raw = CIImage(cvPixelBuffer: observation.pixelBuffer)
+    guard raw.extent.width > 0, raw.extent.height > 0 else {
+      return nil
+    }
+
+    let scaled = raw.transformed(
+      by: CGAffineTransform(
+        scaleX: extent.width / raw.extent.width,
+        y: extent.height / raw.extent.height
+      )
+    )
+    let cropped = scaled.cropped(to: padded)
+    let black = CIImage(color: CIColor.black).cropped(to: extent)
+    return cropped.composited(over: black)
   }
 
   private static func blend(_ image: CIImage, mask: CIImage) -> CIImage? {

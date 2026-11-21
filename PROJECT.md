@@ -55,3 +55,4 @@ archived:
 - 2026-11-21 做"图片转贴纸"最小 MVP：新增本地 Expo 模块 `modules/sticker-vision`，用 `VNGenerateForegroundInstanceMaskRequest` 抠主体，Core Image 合成透明背景，绘制白边后输出 1024 PNG；首页接入 `expo-image-picker` 和结果预览。`tsc` 与 `expo-doctor` 通过，dev-4 构建通过（1.0.0 build 3），待在真机上确认抠图效果。
 - 2026-11-21 把贴纸渲染参数收敛到 `src/sticker/options.ts`（outputSize、maxDimension、borderWidthRatio、edgeGrowRatio、closeHoleRatio、insetRatio），Swift 只保留分割、合成和输出内核；以后调白边和边缘只改 JS。dev-6 构建通过（1.0.0 build 5）。
 - 2026-11-21 首页加「微调」面板：边缘收放、白边粗细、补洞三个滑块，直接改已暴露的 JS 参数；纯 JS 改动，不用重新打包。软化和局部框选重抠仍需原生。
+- 2026-11-21 加「人物」抠图模式：`VNGeneratePersonSegmentationRequest` + 最大人体包围盒裁剪，优先保留完整人体和手；通用模式继续用前景实例蒙版。人物模式需要 dev-7 新包。
