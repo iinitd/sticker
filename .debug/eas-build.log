@@ -1,0 +1,1288 @@
+npm warn exec The following package was not found and will be installed: eas-cli@27.11.0
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated rimraf@2.4.5: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated glob@6.0.4: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated http-call@5.3.0: Renamed to @heroku/http-call — please install @heroku/http-call instead.
+npm warn deprecated uuid@7.0.3: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+npm warn deprecated uuid@8.3.2: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+npm warn deprecated uuid@8.3.2: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+Resolved "development" environment for the build. Learn more: https://docs.expo.dev/eas/environment-variables/#setting-the-environment-for-your-builds
+No environment variables with visibility "Plain text" and "Sensitive" found for the "development" environment on EAS.
+Environment variables loaded from the "development" build profile "env" configuration: APP_VARIANT.
+
+- Incrementing buildNumber from 10 to 11.
+✔ Incremented buildNumber from 10 to 11.
+✔ Using remote iOS credentials (Expo server)
+
+Distribution Certificate is not validated for non-interactive builds.
+Skipping Provisioning Profile validation on Apple Servers because we aren't authenticated.
+
+Project Credentials Configuration
+
+Project                   @iinitd/sticker
+Bundle Identifier         lol.milio.sticker.dev
+                          
+Ad Hoc Configuration      
+                          
+Distribution Certificate  
+Serial Number             254F323492DE8293C605057278976EC8
+Expiration Date           Sat, 06 Nov 2027 17:36:43 UTC
+Apple Team                CH854588A4 (Kedun Mao (Individual))
+Updated                   14 days ago
+                          
+Provisioning Profile      
+Developer Portal ID       8S2PB37248
+Status                    active
+Expiration                Sat, 06 Nov 2027 17:36:43 UTC
+Apple Team                CH854588A4 (Kedun Mao (Individual))
+Provisioned devices       - iPhone (UDID: 00008160-000D785401A80036)
+                          - iPhone (UDID: 00008120-00166C4E26A0C01E)
+                          - iPhone (UDID: 00008160-001A20D808434036)
+Updated                   4 days ago
+                          
+All credentials are ready to build @iinitd/sticker (lol.milio.sticker.dev)
+
+- Computing project fingerprint
+✔ Computed project fingerprint
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated rimraf@2.4.5: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated glob@6.0.4: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated uuid@7.0.3: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+npm warn deprecated uuid@8.3.2: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+[SETUP_WORKINGDIR] Preparing workingdir /var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90
+[START_BUILD] Starting build
+  "job": {
+    "type": "managed",
+    "platform": "ios",
+    "projectArchive": {
+      "type": "PATH",
+      "path": "/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-cli-nodejs/75439cbb-5fd1-47e4-a7d3-980593bceb68.tar.gz"
+    },
+    "projectRootDirectory": ".",
+    "builderEnvironment": {
+      "env": {
+        "APP_VARIANT": "dev"
+      }
+    },
+    "cache": {
+      "disabled": false,
+      "paths": [],
+      "clear": false
+    },
+    "updates": {},
+    "developmentClient": true,
+    "scheme": "StickerDev",
+    "username": "iinitd",
+    "version": {
+      "buildNumber": "11"
+    },
+    "experimental": {},
+    "mode": "build",
+    "triggeredBy": "EAS_CLI",
+    "appId": "cfea506d-6447-4827-8ac3-3d86e939896f",
+    "initiatingUserId": "c6fb94d1-3492-494c-b1ca-28da03582308"
+  }
+[PREPARE_PROJECT] Normalizing project source permissions
+[PREPARE_PROJECT] .npmrc found at .npmrc
+[READ_EAS_JSON] Using eas.json:
+[READ_EAS_JSON] {
+  "cli": {
+    "version": ">= 24.8.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "autoIncrement": true,
+      "env": {
+        "APP_VARIANT": "dev"
+      }
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {
+      "autoIncrement": true
+    },
+    "simulator": {
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {}
+    }
+  }
+}
+
+[READ_PACKAGE_JSON] Using package.json:
+[READ_PACKAGE_JSON] {
+  "name": "sticker",
+  "version": "1.0.0",
+  "main": "expo-router/entry",
+  "private": true,
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "expo": "~58.0.26",
+    "expo-constants": "~58.0.16",
+    "expo-dev-client": "~58.0.21",
+    "expo-file-system": "~58.0.14",
+    "expo-image-picker": "~58.0.10",
+    "expo-linking": "~58.0.17",
+    "expo-router": "~58.0.32",
+    "expo-splash-screen": "~58.0.14",
+    "expo-status-bar": "~58.0.5",
+    "expo-system-ui": "~58.0.7",
+    "fast-png": "^8.0.0",
+    "jpeg-js": "^0.4.4",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-native": "0.88.1",
+    "react-native-gesture-handler": "~3.3.0",
+    "react-native-reanimated": "4.7.1",
+    "react-native-safe-area-context": "~5.11.1",
+    "react-native-screens": "~4.30.1",
+    "react-native-web": "~0.21.4",
+    "react-native-worklets": "0.13.0"
+  },
+  "devDependencies": {
+    "@types/react": "~19.3.0",
+    "typescript": "~6.0.3"
+  }
+}
+[INSTALL_DEPENDENCIES] Running "npm ci --include=dev" in /var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build directory
+[INSTALL_DEPENDENCIES] added 558 packages, and audited 559 packages in 12s
+[INSTALL_DEPENDENCIES] 
+[INSTALL_DEPENDENCIES] 44 packages are looking for funding
+[INSTALL_DEPENDENCIES]   run `npm fund` for details
+[INSTALL_DEPENDENCIES] 3 moderate severity vulnerabilities
+[INSTALL_DEPENDENCIES] 
+[INSTALL_DEPENDENCIES] To address all issues (including breaking changes), run:
+[INSTALL_DEPENDENCIES]   npm audit fix --force
+[INSTALL_DEPENDENCIES] 
+[INSTALL_DEPENDENCIES] Run `npm audit` for details.
+The NODE_ENV environment variable is required but was not specified. Ensure the project is bundled with Expo CLI or NODE_ENV is set.
+Proceeding without mode-specific .env
+[READ_APP_CONFIG] Using app configuration:
+[READ_APP_CONFIG] {
+  "name": "Sticker Dev",
+  "slug": "sticker",
+  "version": "1.0.0",
+  "orientation": "default",
+  "icon": "./assets/images/icon.png",
+  "scheme": "sticker-dev",
+  "userInterfaceStyle": "automatic",
+  "ios": {
+    "icon": "./assets/expo.icon",
+    "bundleIdentifier": "lol.milio.sticker.dev",
+    "appleTeamId": "CH854588A4",
+    "supportsTablet": true,
+    "infoPlist": {
+      "ITSAppUsesNonExemptEncryption": false
+    }
+  },
+  "android": {
+    "package": "lol.milio.sticker.dev",
+    "adaptiveIcon": {
+      "backgroundColor": "#E6F4FE",
+      "foregroundImage": "./assets/images/android-icon-foreground.png",
+      "backgroundImage": "./assets/images/android-icon-background.png",
+      "monochromeImage": "./assets/images/android-icon-monochrome.png"
+    },
+    "predictiveBackGestureEnabled": false,
+    "permissions": [
+      "android.permission.RECORD_AUDIO"
+    ]
+  },
+  "web": {
+    "output": "single",
+    "favicon": "./assets/images/favicon.png",
+    "bundler": "metro",
+    "name": "Sticker",
+    "shortName": "Sticker",
+    "display": "standalone",
+    "startUrl": "/",
+    "scope": "/",
+    "themeColor": "#ffffff",
+    "backgroundColor": "#ffffff",
+    "barStyle": "default"
+  },
+  "plugins": [
+    "expo-router",
+    [
+      "expo-image-picker",
+      {
+        "photosPermission": "Sticker 需要访问照片，用来把照片做成贴纸。"
+      }
+    ],
+    [
+      "expo-splash-screen",
+      {
+        "backgroundColor": "#208AEF",
+        "image": "./assets/images/splash-icon.png",
+        "imageWidth": 76
+      }
+    ]
+  ],
+  "experiments": {
+    "typedRoutes": true
+  },
+  "extra": {
+    "router": {
+      "asyncRoutes": {
+        "web": true
+      }
+    },
+    "eas": {
+      "projectId": "cfea506d-6447-4827-8ac3-3d86e939896f"
+    }
+  },
+  "owner": "iinitd",
+  "sdkVersion": "58.0.0",
+  "platforms": [
+    "ios",
+    "android",
+    "web"
+  ]
+}
+[RUN_EXPO_DOCTOR] Running "expo doctor"
+[RUN_EXPO_DOCTOR] Running 20 checks on your project...
+[RUN_EXPO_DOCTOR] 20/20 checks passed. No issues detected!
+[PREPARE_CREDENTIALS] Preparing credentials
+[PREPARE_CREDENTIALS] Creating keychain
+[PREPARE_CREDENTIALS] Preparing credentials for target 'StickerDev'
+[PREPARE_CREDENTIALS] Getting distribution certificate fingerprint and common name
+[PREPARE_CREDENTIALS] Fingerprint = "542F6C6E1AE16286C84220B5183E512268F8BB2F", common name = iPhone Distribution: Kedun Mao (CH854588A4)
+[PREPARE_CREDENTIALS] Writing distribution certificate to /var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/b04ae57e-e853-4ee7-810e-bf3924e5544c.p12
+[PREPARE_CREDENTIALS] Importing distribution certificate into the keychain
+[PREPARE_CREDENTIALS] Initializing provisioning profile
+[PREPARE_CREDENTIALS] Validating whether the distribution certificate has been imported successfully
+[PREPARE_CREDENTIALS] Verifying whether the distribution certificate and provisioning profile match
+[PREBUILD] - Creating native directory (./ios)
+[PREBUILD] ✔ Created native directory
+[PREBUILD] - Updating package.json
+[PREBUILD] ✔ Updated package.json
+[PREBUILD] - Running prebuild
+[PREBUILD] ✔ Finished prebuild
+[PREBUILD] Running "npm install --include=dev" in /var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build directory
+[PREBUILD] up to date, audited 559 packages in 1s
+[PREBUILD] 
+[PREBUILD] 44 packages are looking for funding
+[PREBUILD]   run `npm fund` for details
+[PREBUILD] 3 moderate severity vulnerabilities
+[PREBUILD] 
+[PREBUILD] To address all issues (including breaking changes), run:
+[PREBUILD]   npm audit fix --force
+[PREBUILD] 
+[PREBUILD] Run `npm audit` for details.
+[RESTORE_CACHE] Local builds do not support restoring cache
+[INSTALL_PODS] EXPO_USE_PRECOMPILED_MODULES=0 is set; not enabling precompiled modules use.
+[INSTALL_PODS] Using Expo modules
+[INSTALL_PODS] [Expo] Enabling modular headers for pod ExpoModulesCore
+[INSTALL_PODS] [Expo] Enabling modular headers for pod React-Core
+[INSTALL_PODS] [Expo] Enabling modular headers for pod ExpoModulesJSI
+[INSTALL_PODS] [Expo] Enabling modular headers for pod React-RCTAppDelegate
+[INSTALL_PODS] [Expo] Enabling modular headers for pod React-RCTFabric
+[INSTALL_PODS] [Expo] Enabling modular headers for pod ReactAppDependencyProvider
+[INSTALL_PODS] [Expo] Enabling modular headers for pod ReactCodegen
+[INSTALL_PODS] [Expo] Enabling modular headers for pod RCTRequired
+[INSTALL_PODS] [Expo] Enabling modular headers for pod RCTTypeSafety
+[INSTALL_PODS] [Expo] Enabling modular headers for pod React-bridging
+[INSTALL_PODS] [Expo] Enabling modular headers for pod ReactCommon
+[INSTALL_PODS] [Expo] Enabling modular headers for pod React-NativeModulesApple
+[INSTALL_PODS] [Expo] Enabling modular headers for pod Yoga
+[INSTALL_PODS] [Expo] Enabling modular headers for pod React-Fabric
+[INSTALL_PODS] [Expo] Enabling modular headers for pod React-graphics
+[INSTALL_PODS] [Expo] Enabling modular headers for pod React-utils
+[INSTALL_PODS] [Expo] Enabling modular headers for pod React-featureflags
+[INSTALL_PODS] [Expo] Enabling modular headers for pod React-debug
+[INSTALL_PODS] [Expo] Enabling modular headers for pod React-ImageManager
+[INSTALL_PODS] [Expo] Enabling modular headers for pod React-rendererdebug
+[INSTALL_PODS] [Expo] Enabling modular headers for pod React-jsi
+[INSTALL_PODS] [Expo] Enabling modular headers for pod React-renderercss
+[INSTALL_PODS] [Expo] Enabling modular headers for pod React-cxxstableapi
+[INSTALL_PODS] [Expo] Enabling modular headers for pod hermes-engine
+[INSTALL_PODS] [Expo] Enabling modular headers for pod glog
+[INSTALL_PODS] [Expo] Enabling modular headers for pod boost
+[INSTALL_PODS] [Expo] Enabling modular headers for pod DoubleConversion
+[INSTALL_PODS] [Expo] Enabling modular headers for pod fast_float
+[INSTALL_PODS] [Expo] Enabling modular headers for pod fmt
+[INSTALL_PODS] [Expo] Enabling modular headers for pod RCT-Folly
+[INSTALL_PODS] [Expo] Enabling modular headers for pod SocketRocket
+[INSTALL_PODS] [Expo] Enabling modular headers for pod expo-dev-launcher
+[INSTALL_PODS] [Expo] Enabling modular headers for pod expo-dev-menu
+[INSTALL_PODS] [Expo] Enabling modular headers for pod expo-dev-menu-interface
+[INSTALL_PODS] [Expo] Enabling modular headers for pod EXManifests
+[INSTALL_PODS] [Expo] Enabling modular headers for pod EXUpdatesInterface
+[INSTALL_PODS] [Expo] Enabling modular headers for pod React-jsinspector
+[INSTALL_PODS] [Expo] Enabling modular headers for pod RNScreens
+[INSTALL_PODS] [RNScreens] Gamma project enabled. Including source files.
+[INSTALL_PODS] Found 7 modules for target `StickerDev`
+[INSTALL_PODS] link_native_modules! {ios_packages: [{configurations: [], name: "@react-native-masked-view/masked-view", root: "/private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/@react-native-masked-view/masked-view", path: "../node_modules/@react-native-masked-view/masked-view", podspec_path: "/private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/@react-native-masked-view/masked-view/RNCMaskedView.podspec", script_phases: []}, {configurations: [], name: "expo", root: "/private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/expo", path: "../node_modules/expo", podspec_path: "/private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/expo/Expo.podspec", script_phases: []}, {configurations: [], name: "react-native-gesture-handler", root: "/private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/react-native-gesture-handler", path: "../node_modules/react-native-gesture-handler", podspec_path: "/private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/react-native-gesture-handler/RNGestureHandler.podspec", script_phases: []}, {configurations: [], name: "react-native-reanimated", root: "/private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/react-native-reanimated", path: "../node_modules/react-native-reanimated", podspec_path: "/private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/react-native-reanimated/RNReanimated.podspec", script_phases: []}, {configurations: [], name: "react-native-safe-area-context", root: "/private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/react-native-safe-area-context", path: "../node_modules/react-native-safe-area-context", podspec_path: "/private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/react-native-safe-area-context/react-native-safe-area-context.podspec", script_phases: []}, {configurations: [], name: "react-native-screens", root: "/private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/react-native-screens", path: "../node_modules/react-native-screens", podspec_path: "/private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/react-native-screens/RNScreens.podspec", script_phases: []}, {configurations: [], name: "react-native-worklets", root: "/private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/react-native-worklets", path: "../node_modules/react-native-worklets", podspec_path: "/private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/react-native-worklets/RNWorklets.podspec", script_phases: []}], ios_project_root_path: "/private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/ios", react_native_path: "../node_modules/react-native"}
+[INSTALL_PODS] [RNScreens] Gamma project enabled. Including source files.
+[INSTALL_PODS] Auto-linking React Native modules for target `StickerDev`: RNCMaskedView, RNGestureHandler, RNReanimated, RNScreens, RNWorklets, and react-native-safe-area-context
+[INSTALL_PODS] Framework build type is static library
+[INSTALL_PODS] [ReactNativeDependencies] Setting up ReactNativeDependencies...
+[INSTALL_PODS] [ReactNativeDependencies] Building from source: false
+[INSTALL_PODS] [ReactNativeDependencies] Using tarball from URL: https://repo.reactnative.dev/maven2/com/facebook/react/react-native-artifacts/0.88.1/react-native-artifacts-0.88.1-reactnative-dependencies-debug.tar.gz
+[INSTALL_PODS] [ReactNativeDependencies] Cache miss: downloading reactnative-dependencies-0.88.1-debug.tar.gz from https://repo.reactnative.dev/maven2/com/facebook/react/react-native-artifacts/0.88.1/react-native-artifacts-0.88.1-reactnative-dependencies-debug.tar.gz
+[INSTALL_PODS] % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+[INSTALL_PODS]                                  Dload  Upload   Total   Spent    Left  Speed
+[INSTALL_PODS]   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+[INSTALL_PODS] 100 37.6M  100 37.6M    0     0  72.1M      0 --:--:-- -
+[INSTALL_PODS] -:--:-- --:--:-- 72.2M
+[INSTALL_PODS] [ReactNativeDependencies] Verifying checksum for downloaded reactnative-dependencies-0.88.1-debug.tar.gz...
+[INSTALL_PODS] [Cache] SHA1 verified for reactnative-dependencies-0.88.1-debug.tar.gz
+[INSTALL_PODS] [ReactNativeDependencies] Saved reactnative-dependencies-0.88.1-debug.tar.gz to shared cache (/Users/runner/Library/Caches/ReactNative)
+[INSTALL_PODS] [ReactNativeDependencies] Cache miss: downloading reactnative-dependencies-0.88.1-release.tar.gz from https://repo.reactnative.dev/maven2/com/facebook/react/react-native-artifacts/0.88.1/react-native-artifacts-0.88.1-reactnative-dependencies-release.tar.gz
+[INSTALL_PODS] % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+[INSTALL_PODS] Dload  Upload   Total   Spent    Left  Speed
+[INSTALL_PODS]   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+[INSTALL_PODS] 100 30.5M  100 30.5M    0     0   113M      0 --:--:
+[INSTALL_PODS] -- --:--:-- --:--:--  113M
+[INSTALL_PODS] [ReactNativeDependencies] Verifying checksum for downloaded reactnative-dependencies-0.88.1-release.tar.gz...
+[INSTALL_PODS] [Cache] SHA1 verified for reactnative-dependencies-0.88.1-release.tar.gz
+[INSTALL_PODS] [ReactNativeDependencies] Saved reactnative-dependencies-0.88.1-release.tar.gz to shared cache (/Users/runner/Library/Caches/ReactNative)
+[INSTALL_PODS] [ReactNativeDependencies] Source: {http: "https://repo.reactnative.dev/maven2/com/facebook/react/react-native-artifacts/0.88.1/react-native-artifacts-0.88.1-reactnative-dependencies-debug.tar.gz"}
+[INSTALL_PODS] [ReactNativeCore] Setting up ReactNativeCore...
+[INSTALL_PODS] [ReactNativeCore] Building from source: false
+[INSTALL_PODS] Configuring the target with the New Architecture
+[INSTALL_PODS] [ReactNativeCore] Using React Native Core and React Native Dependencies prebuilt versions.
+[INSTALL_PODS] [36m[1m[Codegen][0m Analyzing /private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/package.json[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m [33mSearching for codegen-enabled libraries in the app.[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m [33mThe "codegenConfig" field is not defined in package.json. Assuming there is nothing to generate at the app level.[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m [33mSearching for codegen-enabled libraries in react-native.config.js[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Found react-native-gesture-handler[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Found react-native-reanimated[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Found react-native-safe-area-context[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Found react-native-screens[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Found react-native-worklets[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Processing rngesturehandler_codegen[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m [33mSearching for podspec in the project dependencies.[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Supported Apple platforms: ios, macos, tvos, visionos for rngesturehandler_codegen[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Processing rnreanimated[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m [33mSearching for podspec in the project dependencies.[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Supported Apple platforms: ios, macos, tvos, visionos for rnreanimated[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Processing safeareacontext[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m [33mSearching for podspec in the project dependencies.[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Supported Apple platforms: ios, macos, tvos, visionos for safeareacontext[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Processing rnscreens[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m [33mSearching for podspec in the project dependencies.[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Supported Apple platforms: ios, tvos, visionos for rnscreens[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Processing rnworklets[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m [33mSearching for podspec in the project dependencies.[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Supported Apple platforms: ios, macos, tvos, visionos for rnworklets[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generating Native Code for rngesturehandler_codegen - ios[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generated artifacts: /private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/ios/build/generated/ios/ReactCodegen[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generating Native Code for rnreanimated - ios[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generated artifacts: /private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/ios/build/generated/ios/ReactCodegen[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generating Native Code for safeareacontext - ios[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generated artifacts: /private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/ios/build/generated/ios/ReactCodegen[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generating Native Code for rnscreens - ios[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generated artifacts: /private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/ios/build/generated/ios/ReactCodegen[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generating Native Code for rnworklets - ios[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generated artifacts: /private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/ios/build/generated/ios/ReactCodegen[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generating RCTThirdPartyComponentsProvider.h[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generated artifact: /private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/ios/build/generated/ios/ReactCodegen/RCTThirdPartyComponentsProvider.h[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generating RCTThirdPartyComponentsProvider.mm[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generated artifact: /private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/ios/build/generated/ios/ReactCodegen/RCTThirdPartyComponentsProvider.mm[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generating RCTModulesProvider.h[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generated artifact: /private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/ios/build/generated/ios/ReactCodegen/RCTModuleProviders.h[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generating RCTModuleProviders.mm[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generated artifact: /private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/ios/build/generated/ios/ReactCodegen/RCTModuleProviders.mm[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generating RCTAppDependencyProvider[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generated artifact: /private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/ios/build/generated/ios/ReactAppDependencyProvider/RCTAppDependencyProvider.h[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generated artifact: /private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/ios/build/generated/ios/ReactAppDependencyProvider/RCTAppDependencyProvider.mm[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generated podspec: /private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/ios/build/generated/ios/ReactAppDependencyProvider/ReactAppDependencyProvider.podspec[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generated podspec: /private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/ios/build/generated/ios/ReactCodegen/ReactCodegen.podspec[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generating Package.swift[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m Generated artifact: /private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/ios/build/generated/ios/Package.swift[0m
+[INSTALL_PODS] [36m[1m[Codegen][0m [33mDone.[0m
+[INSTALL_PODS] Analyzing dependencies
+[INSTALL_PODS] [RNScreens] Gamma project enabled. Including source files.
+[INSTALL_PODS] Fetching podspec for `React-Core-prebuilt` from `../node_modules/react-native/React-Core-prebuilt.podspec`
+[INSTALL_PODS] [ReactNativeCore] Cache miss: downloading reactnative-core-0.88.1-debug.tar.gz from https://repo.reactnative.dev/maven2/com/facebook/react/react-native-artifacts/0.88.1/react-native-artifacts-0.88.1-reactnative-core-debug.tar.gz
+[INSTALL_PODS] % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+[INSTALL_PODS]                                  Dload  Upload   Total   Spent    Left  Speed
+[INSTALL_PODS]   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+[INSTALL_PODS] 78 96.2M   78 75.7M    0     0   115M      0 --:--:-- --:--:-- --:--:--  115M
+[INSTALL_PODS] 100 96.2M  100 96.2M    0     0   113M      0 --:--:--
+[INSTALL_PODS] --:--:-- --:--:--  113M
+[INSTALL_PODS] [ReactNativeCore] Verifying checksum for downloaded reactnative-core-0.88.1-debug.tar.gz...
+[INSTALL_PODS] [Cache] SHA1 verified for reactnative-core-0.88.1-debug.tar.gz
+[INSTALL_PODS] [ReactNativeCore] Saved reactnative-core-0.88.1-debug.tar.gz to shared cache (/Users/runner/Library/Caches/ReactNative)
+[INSTALL_PODS] [ReactNativeCore] Cache miss: downloading reactnative-core-0.88.1-release.tar.gz from https://repo.reactnative.dev/maven2/com/facebook/react/react-native-artifacts/0.88.1/react-native-artifacts-0.88.1-reactnative-core-release.tar.gz
+[INSTALL_PODS] % Total    % Received % Xferd  Average Speed   Time    Time
+[INSTALL_PODS] Time  Current
+[INSTALL_PODS]                                  Dload  Upload   Total   Spent    Left  Speed
+[INSTALL_PODS]   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+[INSTALL_PODS] 100 30.5M  100 30.5M    0     0   120M      0 --:--:-- --:--:-- --:--:
+[INSTALL_PODS] --  121M
+[INSTALL_PODS] [ReactNativeCore] Verifying checksum for downloaded reactnative-core-0.88.1-release.tar.gz...
+[INSTALL_PODS] [Cache] SHA1 verified for reactnative-core-0.88.1-release.tar.gz
+[INSTALL_PODS] [ReactNativeCore] Saved reactnative-core-0.88.1-release.tar.gz to shared cache (/Users/runner/Library/Caches/ReactNative)
+[INSTALL_PODS] [ReactNativeCore] Resolved stable ReactNativeCore-prebuilt version:
+[INSTALL_PODS] [ReactNativeCore]   ../../ios/Pods/ReactNativeCore-artifacts/reactnative-core-0.88.1-debug.tar.gz
+[INSTALL_PODS] [ReactNativeCore]   ../../ios/Pods/ReactNativeCore-artifacts/reactnative-core-0.88.1-release.tar.gz
+[INSTALL_PODS] Fetching podspec for `ReactNativeDependencies` from `../node_modules/react-native/third-party-podspecs/ReactNativeDependencies.podspec`
+[INSTALL_PODS] [ReactNativeDependencies] Using tarball from URL: https://repo.reactnative.dev/maven2/com/facebook/react/react-native-artifacts/0.88.1/react-native-artifacts-0.88.1-reactnative-dependencies-debug.tar.gz
+[INSTALL_PODS] [ReactNativeDependencies] Tarball reactnative-dependencies-0.88.1-debug.tar.gz already exists in Pods. Skipping download.
+[INSTALL_PODS] [ReactNativeDependencies] Tarball reactnative-dependencies-0.88.1-release.tar.gz already exists in Pods. Skipping download.
+[INSTALL_PODS] Fetching podspec for `hermes-engine` from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`
+[INSTALL_PODS] [Hermes] Using release tarball from URL: https://repo.reactnative.dev/maven2/com/facebook/hermes/hermes-ios/260318099.0.5/hermes-ios-260318099.0.5-hermes-ios-debug.tar.gz
+[INSTALL_PODS] [Hermes] Cache miss: downloading hermes-ios-260318099.0.5-debug.tar.gz from https://repo.reactnative.dev/maven2/com/facebook/hermes/hermes-ios/260318099.0.5/hermes-ios-260318099.0.5-hermes-ios-debug.tar.gz
+[INSTALL_PODS] % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+[INSTALL_PODS]                                  Dload
+[INSTALL_PODS] Upload   Total   Spent    Left  Speed
+[INSTALL_PODS]   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+[INSTALL_PODS] 100 30.3M  100 30.3M    0     0   106M      0 --:--:-- --:--:-- --:--:--  107M
+[INSTALL_PODS] [Hermes] Verifying checksum for downloaded hermes-ios-260318099.0.5-debug.tar.gz...
+[INSTALL_PODS] [Hermes] SHA1 verified for hermes-ios-260318099.0.5-debug.tar.gz
+[INSTALL_PODS] [Hermes] Saved hermes-ios-260318099.0.5-debug.tar.gz to shared cache (/Users/runner/Library/Caches/ReactNative)
+[INSTALL_PODS] [Hermes] Cache miss: downloading hermes-ios-260318099.0.5-release.tar.gz from https://repo.reactnative.dev/maven2/com/facebook/hermes/hermes-ios/260318099.0.5/hermes-ios-260318099.0.5-hermes-ios-release.tar.gz
+[INSTALL_PODS] % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+[INSTALL_PODS] Dload  Upload   Total   Spent    Left  Speed
+[INSTALL_PODS]   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+[INSTALL_PODS] 56 24.2
+[INSTALL_PODS] M   56 13.7M    0     0  90.6M      0 --:--:-- --:--:-- --:--:-- 90.2M
+[INSTALL_PODS] 100 24.2M  100 24.2M    0     0  95.3M      0 --:--:-- --:--:-- --:--:-- 95.3M
+[INSTALL_PODS] [Hermes] Verifying checksum for downloaded hermes-ios-260318099.0.5-release.tar.gz...
+[INSTALL_PODS] [Hermes] SHA1 verified for hermes-ios-260318099.0.5-release.tar.gz
+[INSTALL_PODS] [Hermes] Saved hermes-ios-260318099.0.5-release.tar.gz to shared cache (/Users/runner/Library/Caches/ReactNative)
+[INSTALL_PODS] Adding spec repo `trunk` with CDN `https://cdn.cocoapods.org/`
+[INSTALL_PODS] Downloading dependencies
+[INSTALL_PODS] Installing DoubleConversion (1.1.6)
+[INSTALL_PODS] Installing EXConstants (58.0.16)
+[INSTALL_PODS] Installing EXJSONUtils (58.0.1)
+[INSTALL_PODS] Installing EXManifests (58.0.1)
+[INSTALL_PODS] Installing EXUpdatesInterface (58.0.1)
+[INSTALL_PODS] Installing Expo (58.0.26)
+[INSTALL_PODS] Installing ExpoAsset (58.0.21)
+[INSTALL_PODS] Installing ExpoDomWebView (58.0.2)
+[INSTALL_PODS] Installing ExpoFileSystem (58.0.14)
+[INSTALL_PODS] Installing ExpoFont (58.0.12)
+[INSTALL_PODS] Installing ExpoGlassEffect (58.0.5)
+[INSTALL_PODS] Installing ExpoImagePicker (58.0.10)
+[INSTALL_PODS] Installing ExpoKeepAwake (58.0.4)
+[INSTALL_PODS] Installing ExpoLinking (58.0.17)
+[INSTALL_PODS] Installing ExpoLogBox (58.0.15)
+[INSTALL_PODS] Installing ExpoModulesCore (58.1.0)
+[INSTALL_PODS] Installing ExpoModulesJSI (58.0.23)
+[INSTALL_PODS] Installing ExpoModulesWorklets (58.1.0)
+[INSTALL_PODS] Installing ExpoModulesWorkletsAdapter (58.1.0)
+[INSTALL_PODS] Installing ExpoRouter (58.0.32)
+[INSTALL_PODS] Installing ExpoSplashScreen (58.0.14)
+[INSTALL_PODS] Installing ExpoStatusBar (58.0.5)
+[INSTALL_PODS] Installing ExpoSystemUI (58.0.7)
+[INSTALL_PODS] Installing FBLazyVector (0.88.1)
+[INSTALL_PODS] Installing RCT-Folly (2024.11.18.00)
+[INSTALL_PODS] Installing RCTDeprecation (0.88.1)
+[INSTALL_PODS] Installing RCTRequired (0.88.1)
+[INSTALL_PODS] Installing RCTSwiftUI (0.88.1)
+[INSTALL_PODS] Installing RCTSwiftUIWrapper (0.88.1)
+[INSTALL_PODS] Installing RCTTypeSafety (0.88.1)
+[INSTALL_PODS] Installing RNCMaskedView (0.3.2)
+[INSTALL_PODS] Installing RNGestureHandler (3.3.0)
+[INSTALL_PODS] Installing RNReanimated (4.7.1)
+[INSTALL_PODS] Installing RNScreens (4.30.1)
+[INSTALL_PODS] Installing RNWorklets (0.13.0)
+[INSTALL_PODS] Installing React (0.88.1)
+[INSTALL_PODS] Installing React-Core (0.88.1)
+[INSTALL_PODS] Installing React-Core-prebuilt (0.88.1)
+[INSTALL_PODS] Installing React-CoreModules (0.88.1)
+[INSTALL_PODS] Installing React-Fabric (0.88.1)
+[INSTALL_PODS] Installing React-FabricComponents (0.88.1)
+[INSTALL_PODS] Installing React-FabricImage (0.88.1)
+[INSTALL_PODS] Installing React-ImageManager (0.88.1)
+[INSTALL_PODS] Installing React-Mapbuffer (0.88.1)
+[INSTALL_PODS] Installing React-NativeModulesApple (0.88.1)
+[INSTALL_PODS] Installing React-RCTActionSheet (0.88.1)
+[INSTALL_PODS] Installing React-RCTAnimatedModuleProvider (0.88.1)
+[INSTALL_PODS] Installing React-RCTAnimation (0.88.1)
+[INSTALL_PODS] Installing React-RCTAppDelegate (0.88.1)
+[INSTALL_PODS] Installing React-RCTBlob (0.88.1)
+[INSTALL_PODS] Installing React-RCTFBReactNativeSpec (0.88.1)
+[INSTALL_PODS] Installing React-RCTFabric (0.88.1)
+[INSTALL_PODS] Installing React-RCTImage (0.88.1)
+[INSTALL_PODS] Installing React-RCTLinking (0.88.1)
+[INSTALL_PODS] Installing React-RCTNetwork (0.88.1)
+[INSTALL_PODS] Installing React-RCTRuntime (0.88.1)
+[INSTALL_PODS] Installing React-RCTSettings (0.88.1)
+[INSTALL_PODS] Installing React-RCTText (0.88.1)
+[INSTALL_PODS] Installing React-RCTVibration (0.88.1)
+[INSTALL_PODS] Installing React-RuntimeApple (0.88.1)
+[INSTALL_PODS] Installing React-RuntimeCore (0.88.1)
+[INSTALL_PODS] Installing React-RuntimeHermes (0.88.1)
+[INSTALL_PODS] Installing React-bridging (0.88.1)
+[INSTALL_PODS] Installing React-callinvoker (0.88.1)
+[INSTALL_PODS] Installing React-cxxreact (0.88.1)
+[INSTALL_PODS] Installing React-cxxstableapi (0.88.1)
+[INSTALL_PODS] Installing React-debug (0.88.1)
+[INSTALL_PODS] Installing React-defaultsnativemodule (0.88.1)
+[INSTALL_PODS] Installing React-domnativemodule (0.88.1)
+[INSTALL_PODS] Installing React-featureflags (0.88.1)
+[INSTALL_PODS] Installing React-featureflagsnativemodule (0.88.1)
+[INSTALL_PODS] Installing React-graphics (0.88.1)
+[INSTALL_PODS] Installing React-hermes (0.88.1)
+[INSTALL_PODS] Installing React-idlecallbacksnativemodule (0.88.1)
+[INSTALL_PODS] Installing React-intersectionobservernativemodule (0.88.1)
+[INSTALL_PODS] Installing React-jserrorhandler (0.88.1)
+[INSTALL_PODS] Installing React-jsi (0.88.1)
+[INSTALL_PODS] Installing React-jsiexecutor (0.88.1)
+[INSTALL_PODS] Installing React-jsinspector (0.88.1)
+[INSTALL_PODS] Installing React-jsinspectorcdp (0.88.1)
+[INSTALL_PODS] Installing React-jsinspectornetwork (0.88.1)
+[INSTALL_PODS] Installing React-jsinspectortracing (0.88.1)
+[INSTALL_PODS] Installing React-jsitooling (0.88.1)
+[INSTALL_PODS] Installing React-jsitracing (0.88.1)
+[INSTALL_PODS] Installing React-logger (0.88.1)
+[INSTALL_PODS] Installing React-microtasksnativemodule (0.88.1)
+[INSTALL_PODS] Installing React-mutationobservernativemodule (0.88.1)
+[INSTALL_PODS] Installing React-networking (0.88.1)
+[INSTALL_PODS] Installing React-oscompat (0.88.1)
+[INSTALL_PODS] Installing React-perflogger (0.88.1)
+[INSTALL_PODS] Installing React-performancecdpmetrics (0.88.1)
+[INSTALL_PODS] Installing React-performancetimeline (0.88.1)
+[INSTALL_PODS] Installing React-rendererconsistency (0.88.1)
+[INSTALL_PODS] Installing React-renderercss (0.88.1)
+[INSTALL_PODS] Installing React-rendererdebug (0.88.1)
+[INSTALL_PODS] Installing React-resizeobservernativemodule (0.88.1)
+[INSTALL_PODS] Installing React-runtimeexecutor (0.88.1)
+[INSTALL_PODS] Installing React-runtimescheduler (0.88.1)
+[INSTALL_PODS] Installing React-timing (0.88.1)
+[INSTALL_PODS] Installing React-utils (0.88.1)
+[INSTALL_PODS] Installing React-viewtransitionnativemodule (0.88.1)
+[INSTALL_PODS] Installing React-webperformancenativemodule (0.88.1)
+[INSTALL_PODS] Installing ReactAppDependencyProvider (0.88.1)
+[INSTALL_PODS] Installing ReactCodegen (0.88.1)
+[INSTALL_PODS] Installing ReactCommon (0.88.1)
+[INSTALL_PODS] Installing ReactNativeDependencies (0.88.1)
+[INSTALL_PODS] Installing SocketRocket (0.7.1)
+[INSTALL_PODS] Installing StickerVision (1.0.0)
+[INSTALL_PODS] Installing Yoga (0.0.0)
+[INSTALL_PODS] Installing boost (1.84.0)
+[INSTALL_PODS] Installing expo-dev-client (58.0.21)
+[INSTALL_PODS] Installing expo-dev-launcher (58.0.21)
+[INSTALL_PODS] Installing expo-dev-menu (58.0.13)
+[INSTALL_PODS] Installing expo-dev-menu-interface (58.0.2)
+[INSTALL_PODS] Installing fast_float (8.0.0)
+[INSTALL_PODS] Installing fmt (12.1.0)
+[INSTALL_PODS] Installing glog (0.3.5)
+[INSTALL_PODS] Installing hermes-engine (260318099.0.5)
+[INSTALL_PODS] Installing react-native-safe-area-context (5.11.1)
+[INSTALL_PODS] [Expo] Ensuring required slices in ExpoModulesJSI.xcframework
+[INSTALL_PODS] Generating Pods project
+[INSTALL_PODS] Setting USE_HERMES build settings
+[INSTALL_PODS] Setting REACT_NATIVE_PATH build settings
+[INSTALL_PODS] Setting SWIFT_ACTIVE_COMPILATION_CONDITIONS build settings
+[INSTALL_PODS] [Ccache]: Removing Ccache from CC, LD, CXX & LDPLUSPLUS build settings
+[INSTALL_PODS] Setting GCC_OPTIMIZATION_LEVEL to 2 for React Native pods in Release, and for Yoga, glog in all configurations
+[INSTALL_PODS] [ReactNativeCore] Configuring xcconfig for prebuilt React Native Core...
+[INSTALL_PODS] [ReactNativeCore] Prebuilt xcconfig configuration complete
+[INSTALL_PODS] [ReactNativeDependencies] Configuring xcconfig for prebuilt React Native Dependencies...
+[INSTALL_PODS] [ReactNativeDependencies] Prebuilt deps xcconfig configuration complete
+[INSTALL_PODS] [SPM] Cleaning old SPM dependencies from Pods project
+[INSTALL_PODS] [SPM] Adding SPM dependencies to Pods project
+[INSTALL_PODS] [Privacy Manifest Aggregation] No existing PrivacyInfo.xcprivacy file found, creating a new one.
+[INSTALL_PODS] [Privacy Manifest Aggregation] Reading .xcprivacy files to aggregate all used Required Reason APIs.
+[INSTALL_PODS] file_root: StickerDev
+[INSTALL_PODS] Setting CLANG_CXX_LANGUAGE_STANDARD to c++20 on /private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/ios/StickerDev.xcodeproj
+[INSTALL_PODS] ==================== DEPRECATION NOTICE =====================
+[INSTALL_PODS] Calling `pod install` directly is deprecated in React Native
+[INSTALL_PODS] because we are moving away from Cocoapods toward alternative
+[INSTALL_PODS] solutions to build the project.
+[INSTALL_PODS] * If you are using Expo, please run:
+[INSTALL_PODS] `npx expo run:ios`
+[INSTALL_PODS] * If you are using the Community CLI, please run:
+[INSTALL_PODS] `yarn ios`
+[INSTALL_PODS] =============================================================
+[INSTALL_PODS] Pod install took 87 [s] to run
+[INSTALL_PODS] Integrating client project
+[INSTALL_PODS] [!] Please close any current Xcode sessions and use `StickerDev.xcworkspace` for this project from now on.
+[INSTALL_PODS] warning: The @ExpoModule class 'CoreModule' (/private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/expo-modules-core/ios/Core/Modules/CoreModule.swift) is internal, so the generated modules provider cannot reference it. Declare it public to link it automatically, or use a lower access level such as private to opt it out of linking.
+[INSTALL_PODS] [Expo] Installing the build script for target StickerDev
+[INSTALL_PODS] Pod installation complete! There are 120 dependencies from the Podfile and 119 total pods installed.
+[INSTALL_PODS] [Expo] Disabling SWIFT_EMIT_MODULE_INTERFACE for pod targets (prebuilt React compatibility)
+[INSTALL_PODS] [Expo] Ensured modular React header flags on 0 xcconfig(s)
+[INSTALL_PODS] [!] React-Core-prebuilt has added 1 script phase. Please inspect before executing a build. See `https://guides.cocoapods.org/syntax/podspec.html#script_phases` for more information.
+[INSTALL_PODS] [!] ReactNativeDependencies has added 1 script phase. Please inspect before executing a build. See `https://guides.cocoapods.org/syntax/podspec.html#script_phases` for more information.
+[INSTALL_PODS] [!] hermes-engine has added 1 script phase. Please inspect before executing a build. See `https://guides.cocoapods.org/syntax/podspec.html#script_phases` for more information.
+[CONFIGURE_XCODE_PROJECT] Configuring Xcode project
+[CONFIGURE_XCODE_PROJECT] Assigning provisioning profile '*[expo] lol.milio.sticker.dev AdHoc 1794847521694' (Apple Team ID: CH854588A4) to target 'StickerDev'
+[CONFIGURE_XCODE_PROJECT] Updating versions in /var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/ios/StickerDev/Info.plist
+[RUN_FASTLANE] Creating Gymfile
+[RUN_FASTLANE] Gymfile created
+[RUN_FASTLANE] fastlane 2.241.2 (Ruby 3.4.12, gem)
+[RUN_FASTLANE] Successfully loaded '/private/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/ios/Gymfile' 📄
+[RUN_FASTLANE] +---------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[RUN_FASTLANE] |                                                                  Detected Values from './Gymfile'                                                                   |
+[RUN_FASTLANE] +-----------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
+[RUN_FASTLANE] | suppress_xcode_output | true                                                                                                                                        |
+[RUN_FASTLANE] | clean                 | false                                                                                                                                       |
+[RUN_FASTLANE] | scheme                | StickerDev                                                                                                                                  |
+[RUN_FASTLANE] | configuration         | Debug                                                                                                                                       |
+[RUN_FASTLANE] | export_options        |                                                                                                                                             |
+[RUN_FASTLANE] | export_xcargs         | OTHER_CODE_SIGN_FLAGS="--keychain /var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-0018405b-b93c-47b7-a1fa-5912867891d5.keychain" |
+[RUN_FASTLANE] | disable_xcpretty      | true                                                                                                                                        |
+[RUN_FASTLANE] | buildlog_path         | /var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/logs                           |
+[RUN_FASTLANE] | derived_data_path     | ./build                                                                                                                                     |
+[RUN_FASTLANE] | result_bundle         | true                                                                                                                                        |
+[RUN_FASTLANE] | result_bundle_path    | /var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/result-bundle-1795270002759.xcresult                                                       |
+[RUN_FASTLANE] | output_directory      | ./build                                                                                                                                     |
+[RUN_FASTLANE] +-----------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
+[RUN_FASTLANE] Resolving Swift Package Manager dependencies...
+[RUN_FASTLANE] $ xcodebuild -resolvePackageDependencies -workspace ./StickerDev.xcworkspace -scheme StickerDev -configuration Debug -derivedDataPath ./build
+[RUN_FASTLANE] ▸ Command line invocation:
+[RUN_FASTLANE] ▸     /Applications/Xcode_27.1.app/Contents/Developer/usr/bin/xcodebuild -resolvePackageDependencies -workspace ./StickerDev.xcworkspace -scheme StickerDev -configuration Debug -derivedDataPath ./build
+[RUN_FASTLANE] ▸ resolved source packages:
+[RUN_FASTLANE] $ xcodebuild -showBuildSettings -workspace ./StickerDev.xcworkspace -scheme StickerDev -configuration Debug -derivedDataPath ./build 2>&1
+[RUN_FASTLANE] Command timed out after 3 seconds on try 1 of 4, trying again with a 6 second timeout...
+[RUN_FASTLANE] Detected provisioning profile mapping: {"lol.milio.sticker.dev": "c82e3194-7346-443b-9abc-b8bfc797a0d1"}
+[RUN_FASTLANE] 
+[RUN_FASTLANE] +---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+[RUN_FASTLANE] |                                                                                         Summary for gym 2.241.2                                                                                         |
+[RUN_FASTLANE] +-----------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
+[RUN_FASTLANE] | workspace                                                 | ./StickerDev.xcworkspace                                                                                                                    |
+[RUN_FASTLANE] | scheme                                                    | StickerDev                                                                                                                                  |
+[RUN_FASTLANE] | clean                                                     | false                                                                                                                                       |
+[RUN_FASTLANE] | output_directory                                          | ./build                                                                                                                                     |
+[RUN_FASTLANE] | output_name                                               | StickerDev                                                                                                                                  |
+[RUN_FASTLANE] | configuration                                             | Debug                                                                                                                                       |
+[RUN_FASTLANE] | silent                                                    | false                                                                                                                                       |
+[RUN_FASTLANE] | skip_package_ipa                                          | false                                                                                                                                       |
+[RUN_FASTLANE] | skip_package_pkg                                          | false                                                                                                                                       |
+[RUN_FASTLANE] | export_options.method                                     | ad-hoc                                                                                                                                      |
+[RUN_FASTLANE] | export_options.provisioningProfiles.lol.milio.sticker.dev | c82e3194-7346-443b-9abc-b8bfc797a0d1                                                                                                        |
+[RUN_FASTLANE] | export_xcargs                                             | OTHER_CODE_SIGN_FLAGS="--keychain /var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-0018405b-b93c-47b7-a1fa-5912867891d5.keychain" |
+[RUN_FASTLANE] | build_path                                                | /Users/runner/Library/Developer/Xcode/Archives/2026-11-21                                                                                   |
+[RUN_FASTLANE] | derived_data_path                                         | ./build                                                                                                                                     |
+[RUN_FASTLANE] | result_bundle                                             | true                                                                                                                                        |
+[RUN_FASTLANE] | result_bundle_path                                        | /var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/result-bundle-1795270002759.xcresult                                                       |
+[RUN_FASTLANE] | buildlog_path                                             | /var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/logs                           |
+[RUN_FASTLANE] | destination                                               | generic/platform=iOS                                                                                                                        |
+[RUN_FASTLANE] | suppress_xcode_output                                     | true                                                                                                                                        |
+[RUN_FASTLANE] | xcodebuild_formatter                                      | xcbeautify                                                                                                                                  |
+[RUN_FASTLANE] | build_timing_summary                                      | false                                                                                                                                       |
+[RUN_FASTLANE] | disable_xcpretty                                          | true                                                                                                                                        |
+[RUN_FASTLANE] | skip_profile_detection                                    | false                                                                                                                                       |
+[RUN_FASTLANE] | xcodebuild_command                                        | xcodebuild                                                                                                                                  |
+[RUN_FASTLANE] | skip_package_dependencies_resolution                      | false                                                                                                                                       |
+[RUN_FASTLANE] | disallow_xcodebuild_settings_lookup                       | false                                                                                                                                       |
+[RUN_FASTLANE] | disable_package_automatic_updates                         | false                                                                                                                                       |
+[RUN_FASTLANE] | skip_package_repository_fetches                           | false                                                                                                                                       |
+[RUN_FASTLANE] | use_system_scm                                            | false                                                                                                                                       |
+[RUN_FASTLANE] | generate_appstore_info                                    | false                                                                                                                                       |
+[RUN_FASTLANE] | xcode_path                                                | /Applications/Xcode_27.1.app                                                                                                                |
+[RUN_FASTLANE] +-----------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------+
+[RUN_FASTLANE] 
+[RUN_FASTLANE] $ set -o pipefail && xcodebuild -workspace ./StickerDev.xcworkspace -scheme StickerDev -configuration Debug -derivedDataPath ./build -destination generic/platform\=iOS -archivePath /Users/runner/Library/Developer/Xcode/Archives/2026-11-21/StickerDev\ 2026-11-21\ 14.06.59.xcarchive -resultBundlePath /var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/result-bundle-1795270002759.xcresult archive | tee /var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/logs/StickerDev-StickerDev.log > /dev/null
+[RUN_FASTLANE] › Executing react-native Pods/hermes-engine » [CP-User] [Hermes] Replace Hermes for the right configuration, if needed
+[RUN_FASTLANE] › Executing react-native Pods/ReactNativeDependencies » [CP-User] [RNDeps] Replace React Native Dependencies for the right configuration, if needed
+[RUN_FASTLANE] › Executing react-native Pods/hermes-engine » [CP] Copy XCFrameworks
+[RUN_FASTLANE] › Executing react-native Pods/ReactNativeDependencies » [CP] Copy XCFrameworks
+[RUN_FASTLANE] › Executing react-native Pods/React-Core-prebuilt » [CP-User] [RNCore] Replace React Native Core for the right configuration, if needed
+[RUN_FASTLANE] › Preparing Pods/expo-dev-menu-EXDevMenu » ResourceBundle-EXDevMenu-expo-dev-menu-Info.plist
+[RUN_FASTLANE] › Preparing Pods/React-timing-React-timing_privacy » ResourceBundle-React-timing_privacy-React-timing-Info.plist
+[RUN_FASTLANE] › Copying   ios/build/Build/Intermediates.noindex/ArchiveIntermediates/StickerDev/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/React-timing_privacy.bundle/PrivacyInfo.xcprivacy ➜ ../../../../../var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/react-native/ReactCommon/react/timing/PrivacyInfo.xcprivacy
+[RUN_FASTLANE] › Creating  Pods/expo-dev-menu-EXDevMenu » EXDevMenu.bundle
+[RUN_FASTLANE] › Executing react-native Pods/React-Core-prebuilt » [CP] Copy XCFrameworks
+[RUN_FASTLANE] › Preparing Pods/expo-dev-launcher-EXDevLauncher » ResourceBundle-EXDevLauncher-expo-dev-launcher-Info.plist
+[RUN_FASTLANE] › Creating  Pods/React-timing-React-timing_privacy » React-timing_privacy.bundle
+[RUN_FASTLANE] › Creating  Pods/expo-dev-launcher-EXDevLauncher » EXDevLauncher.bundle
+[RUN_FASTLANE] › Preparing Pods/React-cxxreact-React-cxxreact_privacy » ResourceBundle-React-cxxreact_privacy-React-cxxreact-Info.plist
+[RUN_FASTLANE] › Copying   ios/build/Build/Intermediates.noindex/ArchiveIntermediates/StickerDev/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/React-cxxreact_privacy.bundle/PrivacyInfo.xcprivacy ➜ ../../../../../var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/react-native/ReactCommon/cxxreact/PrivacyInfo.xcprivacy
+[RUN_FASTLANE] › Preparing Pods/ExpoSystemUI-ExpoSystemUI_privacy » ResourceBundle-ExpoSystemUI_privacy-ExpoSystemUI-Info.plist
+[RUN_FASTLANE] › Copying   ios/build/Build/Intermediates.noindex/ArchiveIntermediates/StickerDev/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/ExpoSystemUI_privacy.bundle/PrivacyInfo.xcprivacy ➜ ../../../../../var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/expo-system-ui/ios/PrivacyInfo.xcprivacy
+[RUN_FASTLANE] › Creating  Pods/React-cxxreact-React-cxxreact_privacy » React-cxxreact_privacy.bundle
+[RUN_FASTLANE] › Preparing Pods/ExpoFileSystem-ExpoFileSystem_privacy » ResourceBundle-ExpoFileSystem_privacy-ExpoFileSystem-Info.plist
+[RUN_FASTLANE] › Copying   ios/build/Build/Intermediates.noindex/ArchiveIntermediates/StickerDev/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/ExpoFileSystem_privacy.bundle/PrivacyInfo.xcprivacy ➜ ../../../../../var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/expo-file-system/ios/PrivacyInfo.xcprivacy
+[RUN_FASTLANE] › Creating  Pods/ExpoSystemUI-ExpoSystemUI_privacy » ExpoSystemUI_privacy.bundle
+[RUN_FASTLANE] › Creating  Pods/ExpoFileSystem-ExpoFileSystem_privacy » ExpoFileSystem_privacy.bundle
+[RUN_FASTLANE] › Preparing Pods/EXConstants-ExpoConstants_privacy » ResourceBundle-ExpoConstants_privacy-EXConstants-Info.plist
+[RUN_FASTLANE] › Copying   ios/build/Build/Intermediates.noindex/ArchiveIntermediates/StickerDev/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/ExpoConstants_privacy.bundle/PrivacyInfo.xcprivacy ➜ ../../../../../var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/node_modules/expo-constants/ios/PrivacyInfo.xcprivacy
+[RUN_FASTLANE] › Preparing expo-constants Pods/EXConstants-EXConstants » ResourceBundle-EXConstants-EXConstants-Info.plist
+[RUN_FASTLANE] › Creating  Pods/EXConstants-ExpoConstants_privacy » ExpoConstants_privacy.bundle
+[RUN_FASTLANE] › Creating  expo-constants Pods/EXConstants-EXConstants » EXConstants.bundle
+[RUN_FASTLANE] › Executing expo-modules-jsi Pods/ExpoModulesJSI » [CP-User] Build ExpoModulesJSI xcframework
+[RUN_FASTLANE] › Executing react-native Pods/React-RCTFBReactNativeSpec » [CP-User] [RN]Check FBReactNativeSpec
+[RUN_FASTLANE] › Compiling expo-json-utils Pods/EXJSONUtils » NSDictionary+EXJSONUtils.m
+[RUN_FASTLANE] › Compiling expo-json-utils Pods/EXJSONUtils » EXJSONUtils-dummy.m
+[RUN_FASTLANE] › Packaging expo-json-utils Pods/EXJSONUtils » libEXJSONUtils.a
+[RUN_FASTLANE] › Executing sticker Pods/ReactCodegen » [CP-User] Generate Specs
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » safeareacontext-generated.mm
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » rnworklets-generated.mm
+[RUN_FASTLANE] › Compiling expo-dev-menu-interface Pods/expo-dev-menu-interface » expo-dev-menu-interface-dummy.m
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » rnscreens-generated.mm
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » rnreanimated-generated.mm
+[RUN_FASTLANE] › Packaging expo-dev-menu-interface Pods/expo-dev-menu-interface » libexpo-dev-menu-interface.a
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » rngesturehandler_codegen-generated.mm
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » States.cpp
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » States.cpp
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » States.cpp
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » States.cpp
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » ShadowNodes.cpp
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » ShadowNodes.cpp
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » ShadowNodes.cpp
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » ShadowNodes.cpp
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » RCTUnstableModulesRequiringMainQueueSetupProvider.mm
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » RCTThirdPartyComponentsProvider.mm
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » RCTModulesConformingToProtocolsProvider.mm
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » RCTModuleProviders.mm
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » Props.cpp
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » Props.cpp
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » Props.cpp
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » Props.cpp
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » EventEmitters.cpp
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » EventEmitters.cpp
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » EventEmitters.cpp
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » EventEmitters.cpp
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » ComponentDescriptors.cpp
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » ComponentDescriptors.cpp
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » ComponentDescriptors.cpp
+[RUN_FASTLANE] › Executing expo-dev-menu-interface Pods/expo-dev-menu-interface » Copy generated compatibility header
+[RUN_FASTLANE] › Compiling @expo/log-box Pods/ExpoLogBox » ExpoRedBoxSwap.mm
+[RUN_FASTLANE] › Compiling @expo/log-box Pods/ExpoLogBox » ExpoLogBox-dummy.m
+[RUN_FASTLANE] › Compiling react-native-safe-area-context Pods/react-native-safe-area-context » RNCSafeAreaViewState.cpp
+[RUN_FASTLANE] › Compiling react-native-safe-area-context Pods/react-native-safe-area-context » RNCSafeAreaViewShadowNode.cpp
+[RUN_FASTLANE] › Compiling react-native-safe-area-context Pods/react-native-safe-area-context » RNCSafeAreaViewComponentView.mm
+[RUN_FASTLANE] › Packaging @expo/log-box Pods/ExpoLogBox » libExpoLogBox.a
+[RUN_FASTLANE] › Compiling react-native-safe-area-context Pods/react-native-safe-area-context » RNCSafeAreaProviderComponentView.mm
+[RUN_FASTLANE] › Compiling react-native-safe-area-context Pods/react-native-safe-area-context » RNCSafeAreaContext.mm
+[RUN_FASTLANE] › Executing expo-modules-jsi Pods/ExpoModulesJSI » [CP] Copy XCFrameworks
+[RUN_FASTLANE] › Executing @expo/log-box Pods/ExpoLogBox » Copy generated compatibility header
+[RUN_FASTLANE] › Compiling react-native-safe-area-context Pods/react-native-safe-area-context » react-native-safe-area-context-dummy.m
+[RUN_FASTLANE] › Compiling sticker Pods/ReactCodegen » ReactCodegen-dummy.m
+[RUN_FASTLANE] › Packaging sticker Pods/ReactCodegen » libReactCodegen.a
+[RUN_FASTLANE] › Compiling sticker Pods/ReactAppDependencyProvider » RCTAppDependencyProvider.mm
+[RUN_FASTLANE] › Compiling sticker Pods/ReactAppDependencyProvider » ReactAppDependencyProvider-dummy.m
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » WorkletsVersion.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » WorkletsURLSessionDelegate.mm
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » WorkletsModuleProxyInitializer.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » WorkletsModuleProxy.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » WorkletsModule.mm
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » WorkletsJSIUtils.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » WorkletRuntimeRegistry.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » WorkletRuntimeDecorator.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » WorkletRuntime.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » WorkletHermesRuntime.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » VersionUtils.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » UIScheduler.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » UIRuntimeDecorator.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » TextDecoding.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SynchronizableFixed.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SynchronizableDynamic.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SynchronizableAccess.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » StableApi.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SlowAnimations.mm
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » Shareable.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SerializableWorklet.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SerializableTurboModuleLike.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SerializableString.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SerializableSet.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SerializableScalar.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SerializableRemoteFunction.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SerializableRegExp.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SerializableObject.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SerializableMap.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SerializableImport.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SerializableHostObject.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SerializableHostFunction.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SerializableError.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SerializableBigInt.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SerializableArrayBuffer.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » SerializableArray.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » Serializable.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » ScriptLoader.mm
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » RuntimeManager.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » RNRuntimeWorkletDecorator.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » PlatformLogger.mm
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » NetworkingInstaller.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » Networking.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » MemoryManager.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » JSScheduler.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » JSLogger.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » JSIWorkletsModuleProxy.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » JSISerializer.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » IOSUIScheduler.mm
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » HermesProfiling.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » FeatureFlags.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » EventLoop.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » CustomSerializable.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » AsyncQueueImpl.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » AppleNetworkingBackend.mm
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » AnimationFrameQueue.mm
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » AnimationFrameBatchinator.cpp
+[RUN_FASTLANE] › Compiling react-native-safe-area-context Pods/react-native-safe-area-context » RNCSafeAreaViewMode.m
+[RUN_FASTLANE] › Compiling react-native-safe-area-context Pods/react-native-safe-area-context » RNCSafeAreaViewManager.m
+[RUN_FASTLANE] › Compiling react-native-safe-area-context Pods/react-native-safe-area-context » RNCSafeAreaViewLocalData.m
+[RUN_FASTLANE] › Compiling react-native-safe-area-context Pods/react-native-safe-area-context » RNCSafeAreaViewEdges.m
+[RUN_FASTLANE] › Compiling react-native-safe-area-context Pods/react-native-safe-area-context » RNCSafeAreaViewEdgeMode.m
+[RUN_FASTLANE] › Compiling react-native-safe-area-context Pods/react-native-safe-area-context » RNCSafeAreaView.m
+[RUN_FASTLANE] › Compiling react-native-safe-area-context Pods/react-native-safe-area-context » RNCSafeAreaUtils.m
+[RUN_FASTLANE] › Compiling react-native-safe-area-context Pods/react-native-safe-area-context » RNCSafeAreaShadowView.m
+[RUN_FASTLANE] › Compiling react-native-safe-area-context Pods/react-native-safe-area-context » RNCSafeAreaProviderManager.m
+[RUN_FASTLANE] › Compiling react-native-safe-area-context Pods/react-native-safe-area-context » RNCSafeAreaProvider.m
+[RUN_FASTLANE] › Compiling react-native-safe-area-context Pods/react-native-safe-area-context » RNCSafeAreaCornerAdaptation.m
+[RUN_FASTLANE] › Compiling react-native-safe-area-context Pods/react-native-safe-area-context » RNCOnInsetsChangeEvent.m
+[RUN_FASTLANE] › Packaging sticker Pods/ReactAppDependencyProvider » libReactAppDependencyProvider.a
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » UIWindow+RNScreens.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » UIViewController+RNScreens.mm
+[RUN_FASTLANE] › Packaging react-native-safe-area-context Pods/react-native-safe-area-context » libreact-native-safe-area-context.a
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » UIView+RNSUtility.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » UIScrollView+RNScreens.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » UINavigationBar+RNSUtility.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNScreensTurboModule.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabsScreenViewController.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabsScreenEventEmitter.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabsScreenComponentView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabsNavigationStateObserverRegistry.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabsNavigationState.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabsHostState.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabsHostShadowNode.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabsHostEventEmitter.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabsHostComponentView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabsHostComponentView+RNSImageLoader.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabsBottomAccessoryWrapperView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabsBottomAccessoryShadowStateProxy.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabsBottomAccessoryShadowNode.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabsBottomAccessoryHelper.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabsBottomAccessoryEventEmitter.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabsBottomAccessoryContentComponentView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabsBottomAccessoryComponentView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabBarItemCoordinator.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabBarController.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSTabBarAppearanceCoordinator.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackScreenState.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackScreenShadowNode.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackScreenHeaderCoordinator.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackScreenController.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackScreenComponentViewManager.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackScreenComponentView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackScreenComponentEventEmitter.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackOperationCoordinator.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackOperation.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackNavigationController.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackNavigationBarCoordinator.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHostComponentViewManager.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHostComponentView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderSubviewState.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderSubviewShadowNode.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderMenuUpdateOptions.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderMenuTrackerRegistry.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderMenuToggleStateTracker.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderMenuMapper.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderMenuFinder.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderMenuData.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderMenuCoordinator.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderItemWrapperView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderItemState.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderItemSpacerComponentView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderItemShadowStateProxy.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderItemShadowNode.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderItemEventEmitter.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderItemComponentView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderIconResolver.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderIconMapper.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderIconData.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderContentFactory.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderConfigState.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderConfigShadowStateProxy.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderConfigShadowNode.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderConfigEventEmitter.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSStackHeaderConfigComponentView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSSplitScreenShadowStateProxy.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSSplitScreenShadowNode.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSSplitScreenController.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSSplitScreenComponentViewManager.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSSplitScreenComponentView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSSplitScreenComponentEventEmitter.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSSplitNavigationControllerFrameObserver.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSSplitNavigationController.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSSplitHostController.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSSplitHostComponentViewManager.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSSplitHostComponentView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSSplitHostComponentEventEmitter.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSSplitAppearanceCoordinator.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSSplitAppearanceApplicator.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSSearchBar.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScrollViewMarkerComponentView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScrollViewHelper.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScrollViewFinder.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScrollToTopGuardGestureRecognizer.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScrollToTopGuard.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScrollEdgeEffectApplicator.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScreenWindowTraits.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScreenViewEvent.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScreenState.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScreenStackHeaderSubviewState.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScreenStackHeaderSubviewShadowNode.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScreenStackHeaderSubview.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScreenStackHeaderConfigState.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScreenStackHeaderConfigShadowNode.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScreenStackHeaderConfig.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScreenStackAnimator.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScreenStack.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScreenShadowNodeCommitHook.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScreenShadowNode.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScreenRemovalListener.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScreenNavigationContainer.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScreenFooter.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScreenContentWrapper.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScreenContainer.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSScreen.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSSafeAreaViewState.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSSafeAreaViewShadowNode.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSSafeAreaViewComponentView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSReactBaseView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSPresentationSourceProvider.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSPercentDrivenInteractiveTransition.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSParentContainerItemRegistry.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSNavigationBar.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSModule.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSModalScreenShadowNode.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSModalScreen.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSImageLoadingHelper.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSHeaderHeightChangeEvent.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSFullWindowOverlayShadowNode.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSFullWindowOverlay.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSFormSheetUpdateCoordinator.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSFormSheetPresentationManager.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSFormSheetHostState.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSFormSheetHostShadowStateProxy.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSFormSheetHostShadowNode.cpp
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSFormSheetHostEventEmitter.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSFormSheetHostComponentView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSFormSheetDetentResolver.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSFormSheetContentWrapperComponentView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSFormSheetContentView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSFormSheetContentController.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSFormSheetConfigurationApplicator.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSConvert.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSConversions.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSConversions-Tabs.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSConversions-Stack.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSConversions-SplitView.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSConversions-ScrollViewMarker.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSConversions-Fabric.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSContainerItemSupport.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSContainerHelpers.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSBarButtonItem.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNSBackBarButtonItem.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RCTSurfaceTouchHandler+RNSUtility.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RCTImageComponentView+RNSScreenStackHeaderConfig.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RCTConvert+RNSTabs.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » NSString+RNSUtility.mm
+[RUN_FASTLANE] › Compiling react-native-screens Pods/RNScreens » RNScreens-dummy.m
+[RUN_FASTLANE] › Packaging react-native-screens Pods/RNScreens » libRNScreens.a
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » vectors.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » translate.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » steps.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » skew.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » scale.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » rotate.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » props.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » platform.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » perspective.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » matrix.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » linear.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » interpolators.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » cubicBezier.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » common.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » algorithms.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » ViewStylesRepository.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » ValueInterpolator.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » UpdatesRegistryManager.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » UpdatesRegistry.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » UIRuntimeDecorator.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » UIEventHandlerRegistry.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » UIEventHandler.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » TransitionStyleInterpolator.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » TransitionProgressProvider.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » TransformsStyleInterpolator.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » TransformOperationInterpolator.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » TransformOperation.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » TransformOp.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » TransformMatrix3D.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » TransformMatrix2D.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » TransformMatrix.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » TimeProgressProvider.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » SynchronousWritesTracker.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » SynchronousPropsBufferSerializer.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » StyleOperationInterpolator.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » StyleOperation.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » StaticPropsRegistry.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » StaleSynchronousPropsTracker.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » SimpleValueInterpolator.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » SharedTransitions.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » ShadowTreeCloner.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » SetGestureState.mm
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » SVGStrokeDashArray.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » SVGStops.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » SVGPath.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » SVGBrush.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » RunLifecycle.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » ResolvableValueInterpolator.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » RecordPropertiesInterpolator.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » ReanimatedVersion.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » ReanimatedMountHook.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » ReanimatedModuleProxy.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » ReanimatedModule.mm
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » ReanimatedCommitHook.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » RNRuntimeDecorator.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » REATouchHoverCoordinator.mm
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » REASynchronousPropsRewriter.mm
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » REASlowAnimations.mm
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » REASharedTransitionBoundaryView.mm
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » REASharedTransitionBoundaryShadowNode.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » REAPseudoSelectorObserver.mm
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » REAPseudoSelectorAttachQueue.mm
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » REANodesManager.mm
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » REAKeyboardEventObserver.mm
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » REACSSPlatformTransitions.mm
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » REACSSPlatformProps.mm
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » Quaternion.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » PseudoStylesRegistry.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » PropsDiffer.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » PropertyInterpolator.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » PropValueProcessor.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » PlatformDepMethodsHolderImpl.mm
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » OperationsStyleInterpolator.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » OperationsLoop.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » NativeProxy.mm
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » LayoutAnimationsProxy_Legacy.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » LayoutAnimationsProxyRegistry.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » LayoutAnimationsProxyCommon.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » LayoutAnimationsProxy.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » LayoutAnimationsManager.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » InterpolatorRegistry.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » InterpolatorFactory.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » GroupPropertiesInterpolator.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » FilterStyleInterpolator.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » FilterOperationInterpolator.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » FilterOperation.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » FilterOp.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » FeatureFlags.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » EasingFunctions.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » EasingConfigs.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSValueVariant.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSTransitionsRegistry.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSTransitionConfig.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSTransition.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSPlatformTransitionProxy.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSNumber.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSLoopTransition.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSLoopAnimation.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSLengthVector.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSLengthArray.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSLength.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSKeyword.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSKeyframesRegistry.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSKeyframesConfig.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSEventsEmitter.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSDropShadow.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSDiscreteArray.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSColor.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSBoxShadow.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSBoolean.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSAnimationsRegistry.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSAnimationsGroup.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSAnimationConfig.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSAnimation.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » CSSAngle.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » ArrayPropertiesInterpolator.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » AnimationStyleInterpolatorFactory.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » AnimationStyleInterpolator.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » AnimationProgressProvider.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » AnimatedSensorModule.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » AnimatedPropsRegistry.cpp
+[RUN_FASTLANE] › Compiling react-native-worklets Pods/RNWorklets » RNWorklets-dummy.m
+[RUN_FASTLANE] › Packaging react-native-worklets Pods/RNWorklets » libRNWorklets.a
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNNativeViewHandler.mm
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNGestureHandlerRootViewComponentView.mm
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNGestureHandlerPointerTracker.mm
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNGestureHandlerNativeEventUtils.mm
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNGestureHandlerModule.mm
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNGestureHandlerManager.mm
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNGestureHandlerEvents.mm
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNGestureHandlerDetectorShadowNode.cpp
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNGestureHandlerDetector.mm
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNGestureHandlerButtonComponentView.mm
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNGestureHandlerButton.mm
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNGestureHandler.mm
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNGHRuntimeDecorator.cpp
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » ReanimatedSensorContainer.m
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » ReanimatedSensor.m
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » RCTUIView+Reanimated.m
+[RUN_FASTLANE] › Compiling react-native-reanimated Pods/RNReanimated » RNReanimated-dummy.m
+[RUN_FASTLANE] › Packaging react-native-reanimated Pods/RNReanimated » libRNReanimated.a
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNGHVector.m
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNGHStylusData.m
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNTapHandler.m
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNRotationHandler.m
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNRootViewGestureRecognizer.m
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNPinchHandler.m
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNPanHandler.m
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNManualHandler.m
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNManualActivationRecognizer.m
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNLongPressHandler.m
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNHoverHandler.m
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNGestureHandlerRegistry.m
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNForceTouchHandler.m
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNFlingHandler.m
+[RUN_FASTLANE] › Compiling @react-native-masked-view/masked-view Pods/RNCMaskedView » RNCMaskedViewManager.m
+[RUN_FASTLANE] › Compiling @react-native-masked-view/masked-view Pods/RNCMaskedView » RNCMaskedView.m
+[RUN_FASTLANE] › Compiling @react-native-masked-view/masked-view Pods/RNCMaskedView » RNCMaskedView-dummy.m
+[RUN_FASTLANE] › Packaging @react-native-masked-view/masked-view Pods/RNCMaskedView » libRNCMaskedView.a
+[RUN_FASTLANE] › Compiling react-native-gesture-handler Pods/RNGestureHandler » RNGestureHandler-dummy.m
+[RUN_FASTLANE] › Packaging react-native-gesture-handler Pods/RNGestureHandler » libRNGestureHandler.a
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » TypedArray.cpp
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » SwiftUIVirtualViewObjCDev.mm
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » SwiftUIVirtualViewObjC.mm
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » SharedRef.cpp
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » SharedObject.cpp
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » ObjectDeallocator.cpp
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » NativeModule.cpp
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » MemoryBuffer.cpp
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » LazyObject.cpp
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » JSIUtils.cpp
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » ExpoViewState.cpp
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » ExpoViewShadowNode.cpp
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » ExpoViewProps.cpp
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » ExpoViewEventEmitter.cpp
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » ExpoFabricViewObjC.mm
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EventEmitter.cpp
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXSharedObjectUtils.mm
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXReactSchedulerDispatch.mm
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXReactNativeAdapter.mm
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXReactDelegateWrapper.mm
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXOptimizedFunctionUtils.mm
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXJSUtils.mm
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXJSIInstaller.mm
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXJSIConversions.mm
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXHostWrapper.mm
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXContentOriginRegistry.mm
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » ExpoModulesCore-dummy.m
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXSingletonModule.m
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXReactNativeUserNotificationCenterProxy.m
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXPermissionsMethodsDelegate.m
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXModuleRegistryHolderReactModule.m
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXModuleRegistryAdapter.m
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXExportedModule.m
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXAppDefines.m
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » CoreModuleHelper.m
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXUtilities.m
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXPermissionsService.m
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXModuleRegistryProvider.m
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXModuleRegistry.m
+[RUN_FASTLANE] › Compiling expo-modules-core Pods/ExpoModulesCore » EXImageLoader.m
+[RUN_FASTLANE] › Packaging expo-modules-core Pods/ExpoModulesCore » libExpoModulesCore.a
+[RUN_FASTLANE] › Executing expo-modules-core Pods/ExpoModulesCore » Copy generated compatibility header
+[RUN_FASTLANE] ❌  property access can throw but is not marked with 'try'
+   └─/var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/modules/sticker-vision/ios/StickerVisionModule.swift:225:36
+[RUN_FASTLANE] ⚠️  Script has ambiguous dependencies causing it to run on every build.
+   To fix, go to: Xcode » StickerDev/StickerDev » Build Phases » '[Expo Dev Launcher] Strip Local Network Keys for Release'
+   Either: Uncheck "Based on dependency analysis", or select output files to trigger the script
+
+[RUN_FASTLANE] ▸ ** ARCHIVE FAILED **
+[RUN_FASTLANE] ▸ The following build commands failed:
+[RUN_FASTLANE] ▸ 	SwiftCompile normal arm64 /var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/modules/sticker-vision/ios/StickerVisionModule.swift (in target 'StickerVision' from project 'Pods')
+[RUN_FASTLANE] ▸ 	SwiftCompile normal arm64 Compiling\ StickerVisionModule.swift /var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-local-nodejs/925e05f1-e360-4a36-8f83-481180b72c90/build/modules/sticker-vision/ios/StickerVisionModule.swift (in target 'StickerVision' from project 'Pods')
+[RUN_FASTLANE] ▸ 	Archiving workspace StickerDev with scheme StickerDev
+[RUN_FASTLANE] ▸ (3 failures)
+[RUN_FASTLANE] Exit status: 65
+[RUN_FASTLANE] 
+[RUN_FASTLANE] Maybe the error shown is caused by using the wrong version of Xcode
+[RUN_FASTLANE] Found multiple versions of Xcode in '/Applications/'
+[RUN_FASTLANE] Make sure you selected the right version for your project
+[RUN_FASTLANE] This build process was executed using '/Applications/Xcode_27.1.app'
+[RUN_FASTLANE] If you want to update your Xcode path, either
+[RUN_FASTLANE] 
+[RUN_FASTLANE] - Specify the Xcode version in your Fastfile
+[RUN_FASTLANE] ▸ xcversion(version: "8.1") # Selects Xcode 8.1.0
+[RUN_FASTLANE] 
+[RUN_FASTLANE] - Specify an absolute path to your Xcode installation in your Fastfile
+[RUN_FASTLANE] ▸ xcode_select "/Applications/Xcode8.app"
+[RUN_FASTLANE] 
+[RUN_FASTLANE] - Manually update the path using
+[RUN_FASTLANE] ▸ sudo xcode-select -s /Applications/Xcode.app
+[RUN_FASTLANE] 
+[RUN_FASTLANE] +--------------------------------------------+
+[RUN_FASTLANE] |             Build environment              |
+[RUN_FASTLANE] +-------------+------------------------------+
+[RUN_FASTLANE] | xcode_path  | /Applications/Xcode_27.1.app |
+[RUN_FASTLANE] | gym_version | 2.241.2                      |
+[RUN_FASTLANE] | sdk         | iPhoneOS27.1.sdk             |
+[RUN_FASTLANE] +-------------+------------------------------+
+[RUN_FASTLANE] Looks like fastlane ran into a build/archive error with your project
+[RUN_FASTLANE] It's hard to tell what's causing the error, so we wrote some guides on how
+[RUN_FASTLANE] to troubleshoot build and signing issues: https://docs.fastlane.tools/codesigning/getting-started/
+[RUN_FASTLANE] Before submitting an issue on GitHub, please follow the guide above and make
+[RUN_FASTLANE] sure your project is set up correctly.
+[RUN_FASTLANE] fastlane uses `xcodebuild` commands to generate your binary, you can see the
+[RUN_FASTLANE] the full commands printed out in yellow in the above log.
+[RUN_FASTLANE] Make sure to inspect the output above, as usually you'll find more error information there
+[RUN_FASTLANE] 
+[RUN_FASTLANE] [!] Error building the application - see the log above
+[RUN_FASTLANE] 
+› 1 error(s), and 1 warning(s)
+
+[RUN_FASTLANE] Error: The "Run fastlane" step failed because of an error in the Xcode build process. We automatically detected following errors in your Xcode build logs:
+- property access can throw but is not marked with 'try'
+- property access can throw but is not marked with 'try'
+Refer to "Xcode Logs" below for additional, more detailed logs.
+[CLEAN_UP_CREDENTIALS] Destroying keychain - /var/folders/5n/5t77mfb93jd7q8v9s6f0dn0m0000gn/T/eas-build-0018405b-b93c-47b7-a1fa-5912867891d5.keychain
+[CLEAN_UP_CREDENTIALS] Removing provisioning profile
+
+Build failed
+The "Run fastlane" step failed because of an error in the Xcode build process. We automatically detected following errors in your Xcode build logs:
+- property access can throw but is not marked with 'try'
+- property access can throw but is not marked with 'try'
+Refer to "Xcode Logs" below for additional, more detailed logs.
+Error: The "Run fastlane" step failed because of an error in the Xcode build process. We automatically detected following errors in your Xcode build logs:
+- property access can throw but is not marked with 'try'
+- property access can throw but is not marked with 'try'
+Refer to "Xcode Logs" below for additional, more detailed logs.
+    at resolveBuildPhaseErrorAsync (/Users/runner/.npm/_npx/df4780d18ef17ad1/node_modules/@expo/build-tools/dist/buildErrors/detectError.js:61:12)
+    at async BuildContext.handleBuildPhaseErrorAsync (/Users/runner/.npm/_npx/df4780d18ef17ad1/node_modules/@expo/build-tools/dist/context.js:198:28)
+    at async BuildContext.runBuildPhase (/Users/runner/.npm/_npx/df4780d18ef17ad1/node_modules/@expo/build-tools/dist/context.js:143:35)
+    at async buildInnerAsync (/Users/runner/.npm/_npx/df4780d18ef17ad1/node_modules/@expo/build-tools/dist/builders/ios.js:159:26)
+    at async buildAsync (/Users/runner/.npm/_npx/df4780d18ef17ad1/node_modules/@expo/build-tools/dist/builders/ios.js:57:9)
+    at async runBuilderWithHooksAsync (/Users/runner/.npm/_npx/df4780d18ef17ad1/node_modules/@expo/build-tools/dist/builders/common.js:13:13)
+    at async Object.iosBuilder (/Users/runner/.npm/_npx/df4780d18ef17ad1/node_modules/@expo/build-tools/dist/builders/ios.js:42:16)
+    at async buildIosAsync (/Users/runner/.npm/_npx/df4780d18ef17ad1/node_modules/eas-cli-local-build-plugin/dist/ios.js:43:12)
+    at async buildAsync (/Users/runner/.npm/_npx/df4780d18ef17ad1/node_modules/eas-cli-local-build-plugin/dist/build.js:58:29)
+    at async main (/Users/runner/.npm/_npx/df4780d18ef17ad1/node_modules/eas-cli-local-build-plugin/dist/main.js:16:9)
+
+Build context (for debugging this failed local build):
+  Platform: ios
+  Build profile: development
+  Workflow: managed
+  Distribution: internal
+  Credentials source: remote
+  Project root directory: .
+  Required package manager: npm
+  eas-cli version: 27.11.0
+  SDK version: 58.0.0
+  React Native version: 0.88.1
+  Expo package version: 58.0.26
+  App version: 1.0.0
+  Fingerprint hash: f1942ece1faa9ed1270053c9c21f745851cadfbb
+  Git commit: bc50dad1f3bfca212f3b11c7c5cde4ed7890d031
+  Git working tree dirty: true
+  Build tracking ID: 55144a67-fff6-4463-8765-1fd94de20fe4
+  Project ID: cfea506d-6447-4827-8ac3-3d86e939896f
+npx -y eas-cli-local-build-plugin@27.11.0 exited with non-zero code: 1
+    Error: build command failed.
