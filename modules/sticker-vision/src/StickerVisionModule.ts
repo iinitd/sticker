@@ -11,7 +11,7 @@ declare class StickerVisionModule extends NativeModule<{}> {
   makeStickerAsync(
     uri: string,
     options: StickerRenderOptions,
-  ): Promise<StickerRenderResult>;
+  ): Promise<StickerRenderResult | string>;
 }
 
 export default requireNativeModule<StickerVisionModule>("StickerVision");

@@ -64,11 +64,17 @@ export default function Index() {
       setError(null);
 
       try {
-        const result = await StickerVision.makeStickerAsync(uri, nextOptions);
+        const raw = await StickerVision.makeStickerAsync(uri, nextOptions);
+        const resultUri = typeof raw === "string" ? raw : raw.uri;
+        const resultMode = typeof raw === "string" ? null : raw.mode;
+
+        if (!resultUri) {
+          throw new Error("抠图结果为空，请重新选择照片。");
+        }
 
         if (id === requestID.current) {
-          setStickerUri(result.uri);
-          setRenderMode(result.mode);
+          setStickerUri(resultUri);
+          setRenderMode(resultMode);
           setShowOriginal(false);
         }
       } catch (cause) {
