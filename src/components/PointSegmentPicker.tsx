@@ -26,6 +26,13 @@ type PointSegmentPickerProps = {
   onClose: () => void;
 };
 
+type SelectedRegion = {
+  id: string;
+  x: number;
+  y: number;
+  maskUri: string;
+};
+
 export function PointSegmentPicker({
   visible,
   imageUri,
@@ -35,8 +42,7 @@ export function PointSegmentPicker({
   onApplied,
   onClose,
 }: PointSegmentPickerProps) {
-  const [maskUri, setMaskUri] = useState<string | null>(null);
-  const [point, setPoint] = useState<{ x: number; y: number } | null>(null);
+  const [regions, setRegions] = useState<SelectedRegion[]>([]);
   const [loading, setLoading] = useState(false);
   const [applying, setApplying] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState<number | null>(null);
@@ -55,29 +61,43 @@ export function PointSegmentPicker({
     return () => subscription.remove();
   }, []);
 
-  const onTap = async (locationX: number, locationY: number) => {
+  useEffect(() => {
+    if (visible) {
+      setRegions([]);
+      setError(null);
+    }
+  }, [visible, imageUri]);
+
+  const addRegion = async (locationX: number, locationY: number) => {
     if (!imageUri || stageWidth <= 0 || stageHeight <= 0 || loading) {
       return;
     }
 
-    const nextPoint = {
+    const point = {
       x: locationX / stageWidth,
       y: locationY / stageHeight,
     };
 
-    setPoint(nextPoint);
     setLoading(true);
     setDownloadProgress(null);
     setError(null);
-    setMaskUri(null);
 
     try {
       const result = await StickerVision.segmentAtPointAsync(
         imageUri,
-        nextPoint.x,
-        nextPoint.y,
+        point.x,
+        point.y,
       );
-      setMaskUri(result.uri);
+
+      setRegions((previous) => [
+        ...previous,
+        {
+          id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+          x: point.x,
+          y: point.y,
+          maskUri: result.uri,
+        },
+      ]);
     } catch (cause) {
       setError(
         cause instanceof Error
@@ -90,8 +110,16 @@ export function PointSegmentPicker({
     }
   };
 
-  const applyPoint = async () => {
-    if (!imageUri || !point || applying) {
+  const removeRegion = (id: string) => {
+    if (loading || applying) {
+      return;
+    }
+
+    setRegions((previous) => previous.filter((region) => region.id !== id));
+  };
+
+  const applyRegions = async () => {
+    if (!imageUri || regions.length === 0 || applying) {
       return;
     }
 
@@ -99,12 +127,29 @@ export function PointSegmentPicker({
     setError(null);
 
     try {
-      const result = await StickerVision.applyPointAsync(
-        imageUri,
-        point.x,
-        point.y,
-        options,
-      );
+      const points = regions.map((region) => ({
+        x: region.x,
+        y: region.y,
+        include: true,
+      }));
+
+      if (
+        regions.length > 1 &&
+        typeof StickerVision.applyPointsAsync !== "function"
+      ) {
+        throw new Error("多点应用需要安装最新开发包。");
+      }
+
+      const result =
+        typeof StickerVision.applyPointsAsync === "function"
+          ? await StickerVision.applyPointsAsync(imageUri, points, options)
+          : await StickerVision.applyPointAsync(
+              imageUri,
+              points[0].x,
+              points[0].y,
+              options,
+            );
+
       onApplied(result);
       onClose();
     } catch (cause) {
@@ -127,7 +172,7 @@ export function PointSegmentPicker({
         <View style={styles.header}>
           <View>
             <Text style={styles.title}>点选分割</Text>
-            <Text style={styles.subtitle}>点一下要补回的位置</Text>
+            <Text style={styles.subtitle}>点位置添加区域，点圆点移除</Text>
           </View>
           <Pressable hitSlop={10} onPress={onClose}>
             <Text style={styles.close}>关闭</Text>
@@ -154,23 +199,50 @@ export function PointSegmentPicker({
                 style={styles.stageImage}
                 resizeMode="stretch"
               />
-              {maskUri ? (
+
+              {regions.map((region) => (
                 <Image
-                  source={{ uri: maskUri }}
+                  key={region.id}
+                  source={{ uri: region.maskUri }}
                   style={styles.maskImage}
                   resizeMode="stretch"
                 />
-              ) : null}
+              ))}
+
               <Pressable
-                disabled={loading}
+                disabled={loading || applying}
                 onPress={(event) =>
-                  onTap(
+                  addRegion(
                     event.nativeEvent.locationX,
                     event.nativeEvent.locationY,
                   )
                 }
                 style={styles.stageTouch}
               />
+
+              {regions.map((region, index) => (
+                <Pressable
+                  key={`dot-${region.id}`}
+                  disabled={loading || applying}
+                  onPress={() => removeRegion(region.id)}
+                  style={[
+                    styles.seedDot,
+                    {
+                      left: Math.min(
+                        stageWidth - 30,
+                        Math.max(0, region.x * stageWidth - 14),
+                      ),
+                      top: Math.min(
+                        stageHeight - 30,
+                        Math.max(0, region.y * stageHeight - 14),
+                      ),
+                    },
+                  ]}
+                >
+                  <Text style={styles.seedText}>{index + 1}</Text>
+                </Pressable>
+              ))}
+
               {loading ? (
                 <View style={styles.busyOverlay}>
                   {downloadProgress !== null ? (
@@ -184,7 +256,8 @@ export function PointSegmentPicker({
                             styles.progressFill,
                             {
                               width: `${Math.round(
-                                Math.min(1, Math.max(0, downloadProgress)) * 100,
+                                Math.min(1, Math.max(0, downloadProgress)) *
+                                  100,
                               )}%`,
                             },
                           ]}
@@ -210,10 +283,25 @@ export function PointSegmentPicker({
             <Text style={styles.hint}>先选一张照片。</Text>
           )}
 
-          {maskUri ? (
+          {regions.length > 0 ? (
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryText}>
+                已选 {regions.length} 个区域 · 点图上的编号圆点移除
+              </Text>
+              <Pressable
+                hitSlop={8}
+                onPress={() => setRegions([])}
+                disabled={loading || applying}
+              >
+                <Text style={styles.clearText}>清空</Text>
+              </Pressable>
+            </View>
+          ) : null}
+
+          {regions.length > 0 ? (
             <Pressable
-              disabled={applying}
-              onPress={applyPoint}
+              disabled={applying || loading}
+              onPress={applyRegions}
               style={[
                 styles.applyButton,
                 applying ? styles.applyButtonDisabled : null,
@@ -232,7 +320,7 @@ export function PointSegmentPicker({
           ) : null}
 
           <Text style={styles.hint}>
-            这是 Apple Vision 的点击分割，按对象的边缘出蒙版。第一次使用需要联网下载系统模型，之后离线。
+            点一下添加一个区域，可以连续点多个；点区域上的编号移除。第一次使用需要联网下载系统模型，之后离线。
           </Text>
         </View>
       </SafeAreaView>
@@ -298,7 +386,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     left: 0,
-    opacity: 0.55,
+    opacity: 0.5,
   },
   stageTouch: {
     position: "absolute",
@@ -306,6 +394,23 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     left: 0,
+  },
+  seedDot: {
+    position: "absolute",
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: THEME.colors.accent,
+    borderWidth: 2,
+    borderColor: THEME.colors.background,
+  },
+  seedText: {
+    fontFamily: THEME.fonts.sans,
+    fontSize: 12,
+    fontWeight: "700",
+    color: "#ffffff",
   },
   busyOverlay: {
     position: "absolute",
@@ -341,6 +446,23 @@ const styles = StyleSheet.create({
     fontFamily: THEME.fonts.mono,
     fontSize: 12,
     color: THEME.colors.textMuted,
+  },
+  summaryRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: THEME.spacing.md,
+  },
+  summaryText: {
+    flex: 1,
+    fontFamily: THEME.fonts.sans,
+    fontSize: 12,
+    color: THEME.colors.textSecondary,
+  },
+  clearText: {
+    fontFamily: THEME.fonts.sans,
+    fontSize: 12,
+    color: THEME.colors.accent,
   },
   errorBox: {
     padding: THEME.spacing.md,
