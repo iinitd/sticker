@@ -1,7 +1,10 @@
 import { NativeModule, registerWebModule } from "expo";
 
 class StickerVisionModule extends NativeModule<{}> {
-  async makeStickerAsync(_uri: string, _outputSize: number): Promise<string> {
+  async makeStickerAsync(
+    _uri: string,
+    _options: Record<string, number>,
+  ): Promise<string> {
     throw new Error("图片转贴纸目前只支持 iOS 真机。");
   }
 }

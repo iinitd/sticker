@@ -40,16 +40,33 @@ src/
   app/                  Expo Router 路由；每个文件是一个页面
     _layout.tsx         根布局：SafeArea + Gesture Handler + Stack
     index.tsx           图片转贴纸 MVP
+  sticker/
+    options.ts          贴纸渲染参数（白边、边缘收放、尺寸）
   theme.ts              颜色、间距、圆角、字体 token
 modules/
   sticker-vision/       本地 Expo 模块
-    ios/                Vision 前景蒙版 + 白边 + PNG 输出
+    ios/                Vision 前景蒙版 + 合成 + PNG 输出
 app.json                应用配置（bundle id、图标、插件）
 app.config.js           开发版覆盖 bundle id、名称与 scheme
 eas.json                EAS 构建 profile
 ```
 
 业务组件、hooks、工具放在 `src/` 下，不要放进 `src/app/`。本地原生模块改完要重新构建，Fast Refresh 不会加载新的 Swift 代码。
+
+## 贴纸渲染参数
+
+可调参数都在 `src/sticker/options.ts`，由 JS 传给原生模块。Swift 只负责分割、合成和输出，不再保存白边或边缘的产品参数。
+
+| 参数 | 作用 | 当前值 |
+|------|------|--------|
+| `outputSize` | 输出正方形边长（px） | 1024 |
+| `maxDimension` | 送入 Vision 的最长边 | 1600 |
+| `borderWidthRatio` | 白边粗细，相对短边 | 0.018 |
+| `edgeGrowRatio` | 主体边缘扩张/收缩，负值向内收 | -0.0007 |
+| `closeHoleRatio` | 闭运算半径，补小洞 | 0.0025 |
+| `insetRatio` | 正方形内留白比例 | 0.03 |
+
+改这些值只需要 JS 热更新，不用重新打包；只有改 Swift 方法签名或处理流程才需要重新构建。
 
 ## 配置说明
 

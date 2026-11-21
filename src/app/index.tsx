@@ -12,6 +12,7 @@ import * as ImagePicker from "expo-image-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import StickerVision from "@modules/sticker-vision";
+import { STICKER_RENDER_OPTIONS } from "@/sticker/options";
 import { THEME } from "@/theme";
 
 const CHECKER_CELLS = Array.from({ length: 100 }, (_, index) => index);
@@ -63,7 +64,9 @@ export default function Index() {
     setBusy(true);
 
     try {
-      const uri = await StickerVision.makeStickerAsync(asset.uri, 1024);
+      const uri = await StickerVision.makeStickerAsync(asset.uri, {
+        ...STICKER_RENDER_OPTIONS,
+      });
       setStickerUri(uri);
     } catch (cause) {
       setError(
