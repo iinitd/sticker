@@ -1,10 +1,13 @@
 # Sticker
 
-新 iOS app 的脚手架（工作名 Sticker，正式名字待定）。Expo SDK 58 + React Native 0.88 + Expo Router，Web 与 Android 保留可用。
+新 iOS app（工作名 Sticker，正式名字待定）。Expo SDK 58 + React Native 0.88 + Expo Router，Web 与 Android 保留可用。
+
+当前 MVP：从相册选一张照片，用 iOS Vision 在设备上抠出主体，加一圈白边，生成 1024×1024 透明 PNG。图片不上传。
 
 - Bundle id：`lol.milio.sticker`；开发版 `lol.milio.sticker.dev`
 - 开发者团队：`CH854588A4`
 - URL scheme：`sticker`；开发版 `sticker-dev`
+- 主体抠图要求 iOS 17+。
 
 ## 环境要求
 
@@ -19,10 +22,12 @@ npm install
 npm start
 ```
 
+`npm start` 启动 dev server。相册和抠图依赖原生模块，Expo Go 跑不了，要先装 development build。
+
 其他命令：
 
 ```bash
-npm run web         # 浏览器
+npm run web         # 浏览器（原生抠图不可用）
 npm run ios         # iOS 模拟器
 npm run android     # Android 模拟器
 npm run typecheck   # tsc --noEmit
@@ -32,16 +37,19 @@ npm run typecheck   # tsc --noEmit
 
 ```
 src/
-  app/              Expo Router 路由；每个文件是一个页面
-    _layout.tsx     根布局：SafeArea + Gesture Handler + Stack
-    index.tsx       首页占位
-  theme.ts          颜色、间距、圆角、字体 token
-app.json            应用配置（bundle id、图标、插件）
-app.config.js       开发版覆盖 bundle id、名称与 scheme
-eas.json            EAS 构建 profile
+  app/                  Expo Router 路由；每个文件是一个页面
+    _layout.tsx         根布局：SafeArea + Gesture Handler + Stack
+    index.tsx           图片转贴纸 MVP
+  theme.ts              颜色、间距、圆角、字体 token
+modules/
+  sticker-vision/       本地 Expo 模块
+    ios/                Vision 前景蒙版 + 白边 + PNG 输出
+app.json                应用配置（bundle id、图标、插件）
+app.config.js           开发版覆盖 bundle id、名称与 scheme
+eas.json                EAS 构建 profile
 ```
 
-业务组件、hooks、工具放在 `src/` 下，不要放进 `src/app/`。
+业务组件、hooks、工具放在 `src/` 下，不要放进 `src/app/`。本地原生模块改完要重新构建，Fast Refresh 不会加载新的 Swift 代码。
 
 ## 配置说明
 

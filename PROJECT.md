@@ -4,6 +4,7 @@ status: active
 created: 2026-11-17
 updated:
   - 2026-11-17
+  - 2026-11-21
 archived:
 ---
 
@@ -40,6 +41,8 @@ archived:
 - 证书可复用 Clacko 那张（同一开发者团队 `CH854588A4`），但每个 bundle id 需要单独的 provisioning profile。
 - 本机 Xcode 16.4 编不了 SDK 58，本地原生构建走不通；构建交给 GitHub Actions 的 `eas build --local`。
 - 产品形态（做什么、叫什么）待定。当前名称 `Sticker`、slug `sticker`、scheme `sticker` 都是占位，图标沿用 Expo 模板图；名字定下来后要一起改 `app.json`、`app.config.js` 和商店页文案。
+- 已有"图片转贴纸"最小 MVP：相册选图 → Vision 前景蒙版抠主体 → 加白边 → 输出 1024×1024 透明 PNG。抠图在本地 `modules/sticker-vision`（Swift），要求 iOS 17+，Expo Go 跑不了，需要 development build。
+- MVP 还没做 240×240 导出、GIF、保存到相册和编辑；这些等看效果后再定。
 
 ## 记录
 
@@ -48,3 +51,4 @@ archived:
 - 2026-11-17 记下表情包输出规范：动态 GIF、静态 JPG/PNG/GIF，统一 240×240，超过 500KB 会被平台压缩。
 - 2026-11-17 接上 GitHub 远端 `iinitd/sticker`，补 dev client 的 Actions 工作流（`macos-26` + `eas build --local` + gh-pages 安装页）和发布脚本。
 - 2026-11-17 dev client 构建跑通（tag `dev-3`，run 43912965623）：IPA 已上传 artifact，安装页已推到 `gh-pages`。仓库 Pages 还没打开，安装页暂时 404。
+- 2026-11-21 做"图片转贴纸"最小 MVP：新增本地 Expo 模块 `modules/sticker-vision`，用 `VNGenerateForegroundInstanceMaskRequest` 抠主体，Core Image 合成透明背景，绘制白边后输出 1024 PNG；首页接入 `expo-image-picker` 和结果预览。`tsc` 与 `expo-doctor` 通过，待真机构建验证。
