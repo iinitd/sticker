@@ -9,6 +9,8 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { File } from "expo-file-system";
+import { decode as decodePng } from "fast-png";
 
 import StickerVision, {
   type StickerRenderResult,
@@ -31,7 +33,51 @@ type SelectedRegion = {
   x: number;
   y: number;
   maskUri: string;
+  hitMap: Uint8Array;
 };
+
+const HIT_SIZE = 128;
+
+async function buildHitMap(maskUri: string): Promise<Uint8Array> {
+  const bytes = await new File(maskUri).bytes();
+  const decoded = decodePng(bytes);
+  const width = decoded.width;
+  const height = decoded.height;
+  const channels = decoded.channels;
+  const data = decoded.data as Uint8Array;
+  const map = new Uint8Array(HIT_SIZE * HIT_SIZE);
+
+  for (let y = 0; y < HIT_SIZE; y += 1) {
+    const sy = Math.min(height - 1, Math.floor(((y + 0.5) / HIT_SIZE) * height));
+
+    for (let x = 0; x < HIT_SIZE; x += 1) {
+      const sx = Math.min(width - 1, Math.floor(((x + 0.5) / HIT_SIZE) * width));
+      const index = (sy * width + sx) * channels;
+      const alpha =
+        channels >= 4
+          ? data[index + 3]
+          : channels === 1
+            ? data[index]
+            : data[index];
+
+      if (alpha > 16) {
+        map[y * HIT_SIZE + x] = 1;
+      }
+    }
+  }
+
+  return map;
+}
+
+function isHit(region: SelectedRegion, x: number, y: number): boolean {
+  if (region.hitMap.length === 0) {
+    return false;
+  }
+
+  const px = Math.min(HIT_SIZE - 1, Math.max(0, Math.floor(x * HIT_SIZE)));
+  const py = Math.min(HIT_SIZE - 1, Math.max(0, Math.floor(y * HIT_SIZE)));
+  return region.hitMap[py * HIT_SIZE + px] === 1;
+}
 
 export function PointSegmentPicker({
   visible,
@@ -76,6 +122,17 @@ export function PointSegmentPicker({
       y: locationY / stageHeight,
     };
 
+    const hit = [...regions]
+      .reverse()
+      .find((region) => isHit(region, point.x, point.y));
+
+    if (hit) {
+      setRegions((previous) =>
+        previous.filter((region) => region.id !== hit.id),
+      );
+      return;
+    }
+
     setLoading(true);
     setDownloadProgress(null);
     setError(null);
@@ -87,6 +144,14 @@ export function PointSegmentPicker({
         point.y,
       );
 
+      let hitMap: Uint8Array<ArrayBufferLike> = new Uint8Array(0);
+      try {
+        hitMap = await buildHitMap(result.uri);
+      } catch {
+        // The mask is still usable for display and application; without a
+        // hit map it just cannot be toggled off from the photo.
+      }
+
       setRegions((previous) => [
         ...previous,
         {
@@ -94,6 +159,7 @@ export function PointSegmentPicker({
           x: point.x,
           y: point.y,
           maskUri: result.uri,
+          hitMap,
         },
       ]);
     } catch (cause) {
@@ -170,7 +236,7 @@ export function PointSegmentPicker({
         <View style={styles.header}>
           <View>
             <Text style={styles.title}>点选分割</Text>
-            <Text style={styles.subtitle}>点位置添加区域，点圆点移除</Text>
+            <Text style={styles.subtitle}>点空白处选中，点已选区域取消</Text>
           </View>
           <Pressable hitSlop={10} onPress={onClose}>
             <Text style={styles.close}>关闭</Text>
@@ -218,29 +284,6 @@ export function PointSegmentPicker({
                 style={styles.stageTouch}
               />
 
-              {regions.map((region, index) => (
-                <Pressable
-                  key={`dot-${region.id}`}
-                  disabled={loading || applying}
-                  onPress={() => removeRegion(region.id)}
-                  style={[
-                    styles.seedDot,
-                    {
-                      left: Math.min(
-                        stageWidth - 30,
-                        Math.max(0, region.x * stageWidth - 14),
-                      ),
-                      top: Math.min(
-                        stageHeight - 30,
-                        Math.max(0, region.y * stageHeight - 14),
-                      ),
-                    },
-                  ]}
-                >
-                  <Text style={styles.seedText}>{index + 1}</Text>
-                </Pressable>
-              ))}
-
               {loading ? (
                 <View style={styles.busyOverlay}>
                   {downloadProgress !== null ? (
@@ -284,7 +327,7 @@ export function PointSegmentPicker({
           {regions.length > 0 ? (
             <View style={styles.summaryRow}>
               <Text style={styles.summaryText}>
-                已选 {regions.length} 个区域 · 点图上的编号圆点移除
+                已选 {regions.length} 个区域
               </Text>
               <Pressable
                 hitSlop={8}
@@ -318,7 +361,7 @@ export function PointSegmentPicker({
           ) : null}
 
           <Text style={styles.hint}>
-            点一下添加一个区域，可以连续点多个；点区域上的编号移除。第一次使用需要联网下载系统模型，之后离线。
+            点一下选中一个区域；再点同一个区域取消。第一次使用需要联网下载系统模型，之后离线。
           </Text>
         </View>
       </SafeAreaView>
@@ -392,23 +435,6 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     left: 0,
-  },
-  seedDot: {
-    position: "absolute",
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: THEME.colors.accent,
-    borderWidth: 2,
-    borderColor: THEME.colors.background,
-  },
-  seedText: {
-    fontFamily: THEME.fonts.sans,
-    fontSize: 12,
-    fontWeight: "700",
-    color: "#ffffff",
   },
   busyOverlay: {
     position: "absolute",
