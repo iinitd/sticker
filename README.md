@@ -75,7 +75,9 @@ eas.json                EAS 构建 profile
 
 「点选」走 iOS 27 的 `GenerateIterativeSegmentationRequest`：打开时自动抠图作为底图区域一起显示，可以点它取消；点空白处新增区域，点已选区域取消。第一次使用需要联网下载系统分割模型，之后离线。构建需要 Xcode 27。
 
-原生批次还预置了这些能力，交互后续再定：多点/加减点合并（`applyPointsAsync`）、240 导出（`exportStickerAsync`）、视频取帧（`videoFramesAsync`）、GIF 编码（`encodeGifAsync`）。相机、保存到相册、分享分别用 `expo-camera`、`expo-media-library`、`expo-sharing`，图片处理全在本地。
+原生批次还预置了这些能力：多点/加减点合并（`applyPointsAsync`）、240 导出（`exportStickerAsync`）、视频取帧（`videoFramesAsync`）、GIF 编码（`encodeGifAsync`）。相机、保存到相册、分享分别用 `expo-camera`、`expo-media-library`、`expo-sharing`，图片处理全在本地。
+
+「Live 动图」是实验功能：选一张 Live 图，取配对视频前 2.5 秒，逐帧自动抠图，再合成 240×240 GIF。没有时序跟踪，主体移动快时边缘会跳；保存/分享还没接。
 
 ## 配置说明
 

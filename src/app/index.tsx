@@ -12,6 +12,7 @@ import * as ImagePicker from "expo-image-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import StickerVision from "@modules/sticker-vision";
+import { LiveGifPicker } from "@/components/LiveGifPicker";
 import { ParameterSlider } from "@/components/ParameterSlider";
 import { PointSegmentPicker } from "@/components/PointSegmentPicker";
 import {
@@ -57,6 +58,7 @@ export default function Index() {
   } | null>(null);
   const [previewWidth, setPreviewWidth] = useState(0);
   const [pointPickerVisible, setPointPickerVisible] = useState(false);
+  const [liveGifVisible, setLiveGifVisible] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [renderMode, setRenderMode] = useState<
@@ -490,11 +492,27 @@ export default function Index() {
           </Text>
         </Pressable>
 
+        <Pressable
+          onPress={() => setLiveGifVisible(true)}
+          style={({ pressed }) => [
+            styles.secondaryButton,
+            pressed ? styles.buttonPressed : null,
+          ]}
+        >
+          <Text style={styles.secondaryButtonText}>Live 动图</Text>
+        </Pressable>
+
         <Text style={styles.footnote}>
           图片只在设备上处理，不会上传。结果输出 1024×1024 透明 PNG，之后按
           240×240 导出。
         </Text>
       </ScrollView>
+
+      <LiveGifPicker
+        visible={liveGifVisible}
+        options={optionsRef.current}
+        onClose={() => setLiveGifVisible(false)}
+      />
 
       <PointSegmentPicker
         visible={pointPickerVisible}
@@ -756,6 +774,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#ffffff",
+  },
+  secondaryButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: THEME.spacing.md,
+    borderRadius: THEME.radii.lg,
+    borderWidth: 1,
+    borderColor: THEME.colors.border,
+    backgroundColor: THEME.colors.background,
+  },
+  secondaryButtonText: {
+    fontFamily: THEME.fonts.sans,
+    fontSize: 15,
+    fontWeight: "600",
+    color: THEME.colors.primary,
   },
   footnote: {
     fontFamily: THEME.fonts.sans,
