@@ -28,14 +28,12 @@ public class StickerVisionModule: Module {
         throw Exception(name: "InvalidImage", description: "无法解析这张图片。")
       }
 
-      guard let cutout = try Self.makeCutout(from: source) else {
+      guard let cutout = try Self.makeSticker(from: source) else {
         throw Exception(name: "NoSubject", description: "没有识别到可以抠出的主体，换一张试试。")
       }
 
-      let border = max(12, min(source.size.width, source.size.height) * 0.018)
-      let bordered = Self.addWhiteBorder(to: cutout, width: border)
       let side = CGFloat(max(240, min(outputSize, 2048)))
-      let square = Self.fitIntoSquare(bordered, side: side)
+      let square = Self.fitIntoSquare(cutout, side: side)
 
       guard let png = square.pngData() else {
         throw Exception(name: "EncodingFailed", description: "生成 PNG 失败。")
@@ -55,7 +53,7 @@ public class StickerVisionModule: Module {
   }
 
   @available(iOS 17.0, *)
-  private static func makeCutout(from image: UIImage) throws -> UIImage? {
+  private static func makeSticker(from image: UIImage) throws -> UIImage? {
     guard let cgImage = image.cgImage else {
       throw Exception(name: "InvalidImage", description: "无法读取图片像素。")
     }
@@ -73,27 +71,57 @@ public class StickerVisionModule: Module {
       from: handler
     )
 
-    guard let filter = CIFilter(name: "CIBlendWithMask") else {
-      throw Exception(name: "FilterUnavailable", description: "系统抠图滤镜不可用。")
+    let extent = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
+    let foreground = CIImage(cgImage: cgImage)
+    let rawMask = CIImage(cvPixelBuffer: maskBuffer)
+
+    let minSide = min(extent.width, extent.height)
+    let closeRadius = max(2, minSide * 0.0025)
+    let erodeRadius = max(1, minSide * 0.0007)
+    let borderRadius = max(12, minSide * 0.018)
+
+    // Close small holes left by the segmentation model, then pull the edge in
+    // slightly so background-coloured fringe pixels fall outside the subject.
+    let cleanedMask = rawMask
+      .clampedToExtent()
+      .applyingFilter("CIMorphologyMaximum", parameters: [kCIInputRadiusKey: closeRadius])
+      .applyingFilter("CIMorphologyMinimum", parameters: [kCIInputRadiusKey: closeRadius])
+      .applyingFilter("CIMorphologyMinimum", parameters: [kCIInputRadiusKey: erodeRadius])
+      .cropped(to: extent)
+
+    let dilatedMask = cleanedMask
+      .clampedToExtent()
+      .applyingFilter("CIMorphologyMaximum", parameters: [kCIInputRadiusKey: borderRadius])
+      .cropped(to: extent)
+
+    guard let cutout = Self.blend(foreground, mask: cleanedMask) else {
+      throw Exception(name: "MaskFailed", description: "生成透明背景失败。")
     }
 
-    let foreground = CIImage(cgImage: cgImage)
-    let mask = CIImage(cvPixelBuffer: maskBuffer)
+    let white = CIImage(color: CIColor.white).cropped(to: extent)
+    guard let border = Self.blend(white, mask: dilatedMask) else {
+      throw Exception(name: "BorderFailed", description: "生成白边失败。")
+    }
 
-    filter.setValue(foreground, forKey: kCIInputImageKey)
+    let output = cutout.composited(over: border)
+    let context = CIContext(options: [.useSoftwareRenderer: false])
+
+    guard let resultImage = context.createCGImage(output, from: extent) else {
+      return nil
+    }
+
+    return UIImage(cgImage: resultImage, scale: 1, orientation: .up)
+  }
+
+  private static func blend(_ image: CIImage, mask: CIImage) -> CIImage? {
+    guard let filter = CIFilter(name: "CIBlendWithMask") else {
+      return nil
+    }
+
+    filter.setValue(image, forKey: kCIInputImageKey)
     filter.setValue(CIImage.empty(), forKey: kCIInputBackgroundImageKey)
     filter.setValue(mask, forKey: kCIInputMaskImageKey)
-
-    guard let output = filter.outputImage else {
-      return nil
-    }
-
-    let context = CIContext(options: [.useSoftwareRenderer: false])
-    guard let cutout = context.createCGImage(output, from: foreground.extent) else {
-      return nil
-    }
-
-    return UIImage(cgImage: cutout, scale: 1, orientation: .up)
+    return filter.outputImage
   }
 
   private static func downsample(data: Data, maxDimension: CGFloat) -> UIImage? {
@@ -119,35 +147,6 @@ public class StickerVisionModule: Module {
     return UIImage(cgImage: cgImage, scale: 1, orientation: .up)
   }
 
-  private static func addWhiteBorder(to image: UIImage, width: CGFloat) -> UIImage {
-    let canvas = CGSize(
-      width: image.size.width + width * 2,
-      height: image.size.height + width * 2
-    )
-    let format = UIGraphicsImageRendererFormat.default()
-    format.scale = 1
-    format.opaque = false
-
-    let white = image.tinted(.white)
-
-    return UIGraphicsImageRenderer(size: canvas, format: format).image { _ in
-      let rect = CGRect(
-        x: width,
-        y: width,
-        width: image.size.width,
-        height: image.size.height
-      )
-      let steps = 24
-
-      for index in 0..<steps {
-        let angle = CGFloat(index) / CGFloat(steps) * 2 * .pi
-        white.draw(in: rect.offsetBy(dx: cos(angle) * width, dy: sin(angle) * width))
-      }
-
-      image.draw(in: rect)
-    }
-  }
-
   private static func fitIntoSquare(_ image: UIImage, side: CGFloat) -> UIImage {
     let format = UIGraphicsImageRendererFormat.default()
     format.scale = 1
@@ -163,20 +162,6 @@ public class StickerVisionModule: Module {
         y: (side - size.height) / 2
       )
       image.draw(in: CGRect(origin: origin, size: size))
-    }
-  }
-}
-
-private extension UIImage {
-  func tinted(_ color: UIColor) -> UIImage {
-    let format = UIGraphicsImageRendererFormat.default()
-    format.scale = scale
-    format.opaque = false
-
-    return UIGraphicsImageRenderer(size: size, format: format).image { _ in
-      color.setFill()
-      UIRectFill(CGRect(origin: .zero, size: size))
-      draw(in: CGRect(origin: .zero, size: size), blendMode: .destinationIn, alpha: 1)
     }
   }
 }
