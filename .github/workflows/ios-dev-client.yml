@@ -63,13 +63,29 @@ jobs:
           # mismatches; build the modules from source on this toolchain.
           EXPO_USE_PRECOMPILED_MODULES: "0"
         run: |
+          mkdir -p build
+          set -o pipefail
           npx eas-cli@latest build \
             --local \
             --platform ios \
             --profile development \
             --non-interactive \
             --message "$BUILD_MESSAGE" \
-            --output build/StickerDev.ipa
+            --output build/StickerDev.ipa 2>&1 | tee build/eas-build.log
+
+      - name: Publish build log on failure
+        if: failure()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p .debug
+          cp build/eas-build.log .debug/eas-build.log 2>/dev/null || echo "no build log" > .debug/eas-build.log
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B debug-log
+          git add -f .debug/eas-build.log
+          git commit -q -m "Build log ${GITHUB_RUN_NUMBER}"
+          git push --force "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" debug-log
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
