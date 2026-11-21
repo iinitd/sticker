@@ -217,13 +217,12 @@ public class StickerVisionModule: Module {
       throw Exception(name: "ModelNotReady", description: "分割模型状态未知。")
     }
 
-    guard let observation = try await handler.perform(request),
-          let maskBuffer = observation.pixelBuffer else {
+    guard let observation = try await handler.perform(request) else {
       throw Exception(name: "NoMask", description: "这个位置没有分割出区域，换一个点试试。")
     }
 
     let extent = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
-    let rawMask = CIImage(cvPixelBuffer: maskBuffer)
+    let rawMask = CIImage(cgImage: observation.cgImage)
     let scaledMask = rawMask.transformed(
       by: CGAffineTransform(
         scaleX: extent.width / rawMask.extent.width,
