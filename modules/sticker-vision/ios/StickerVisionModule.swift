@@ -317,6 +317,7 @@ public class StickerVisionModule: Module, @unchecked Sendable {
     return (rendered, base.usedPerson)
   }
 
+  @available(iOS 18.0, *)
   private static func normalizedPoint(_ point: PointInput) -> NormalizedPoint {
     NormalizedPoint(
       x: CGFloat(min(max(point.x, 0), 1)),
