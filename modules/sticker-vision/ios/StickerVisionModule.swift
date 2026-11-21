@@ -5,8 +5,8 @@ import CoreImage
 import ImageIO
 
 struct StickerResult: Record {
-  @Field var uri: String
-  @Field var mode: String
+  @Field var uri: String = ""
+  @Field var mode: String = "general"
 }
 
 struct StickerOptions: Record {
