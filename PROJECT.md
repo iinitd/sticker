@@ -53,4 +53,4 @@ archived:
 - 2026-11-17 接上 GitHub 远端 `iinitd/sticker`，补 dev client 的 Actions 工作流（`macos-26` + `eas build --local` + gh-pages 安装页）和发布脚本。
 - 2026-11-17 dev client 构建跑通（tag `dev-3`，run 43912965623）：IPA 已上传 artifact，安装页已推到 `gh-pages`。仓库 Pages 还没打开，安装页暂时 404。
 - 2026-11-21 做"图片转贴纸"最小 MVP：新增本地 Expo 模块 `modules/sticker-vision`，用 `VNGenerateForegroundInstanceMaskRequest` 抠主体，Core Image 合成透明背景，绘制白边后输出 1024 PNG；首页接入 `expo-image-picker` 和结果预览。`tsc` 与 `expo-doctor` 通过，dev-4 构建通过（1.0.0 build 3），待在真机上确认抠图效果。
-- 2026-11-21 把贴纸渲染参数收敛到 `src/sticker/options.ts`（outputSize、maxDimension、borderWidthRatio、edgeGrowRatio、closeHoleRatio、insetRatio），Swift 只保留分割、合成和输出内核；以后调白边和边缘只改 JS。
+- 2026-11-21 把贴纸渲染参数收敛到 `src/sticker/options.ts`（outputSize、maxDimension、borderWidthRatio、edgeGrowRatio、closeHoleRatio、insetRatio），Swift 只保留分割、合成和输出内核；以后调白边和边缘只改 JS。dev-6 构建通过（1.0.0 build 5）。
