@@ -62,11 +62,9 @@ export function PointSegmentPicker({
   }, []);
 
   useEffect(() => {
-    if (visible) {
-      setRegions([]);
-      setError(null);
-    }
-  }, [visible, imageUri]);
+    setRegions([]);
+    setError(null);
+  }, [imageUri]);
 
   const addRegion = async (locationX: number, locationY: number) => {
     if (!imageUri || stageWidth <= 0 || stageHeight <= 0 || loading) {
