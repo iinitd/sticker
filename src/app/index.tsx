@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import StickerVision from "@modules/sticker-vision";
 import { ParameterSlider } from "@/components/ParameterSlider";
-import { RegionPicker } from "@/components/RegionPicker";
+import { PointSegmentPicker } from "@/components/PointSegmentPicker";
 import {
   STICKER_RENDER_OPTIONS,
   type StickerRenderOptions,
@@ -45,7 +45,6 @@ function Checkerboard() {
 
 export default function Index() {
   const [originalUri, setOriginalUri] = useState<string | null>(null);
-  const [originalBase64, setOriginalBase64] = useState<string | null>(null);
   const [stickerUri, setStickerUri] = useState<string | null>(null);
   const [showOriginal, setShowOriginal] = useState(false);
   const [selecting, setSelecting] = useState(false);
@@ -57,7 +56,7 @@ export default function Index() {
     height: number;
   } | null>(null);
   const [previewWidth, setPreviewWidth] = useState(0);
-  const [regionPickerVisible, setRegionPickerVisible] = useState(false);
+  const [pointPickerVisible, setPointPickerVisible] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [renderMode, setRenderMode] = useState<
@@ -114,7 +113,6 @@ export default function Index() {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       allowsEditing: false,
-      base64: true,
       quality: 1,
       selectionLimit: 1,
     });
@@ -125,7 +123,6 @@ export default function Index() {
 
     const asset = result.assets[0];
     setOriginalUri(asset.uri);
-    setOriginalBase64(asset.base64 ?? null);
     setStickerUri(null);
     setRenderMode(null);
     setShowOriginal(false);
@@ -407,10 +404,10 @@ export default function Index() {
               </Text>
             </Pressable>
             <Pressable
-              onPress={() => setRegionPickerVisible(true)}
+              onPress={() => setPointPickerVisible(true)}
               style={styles.segment}
             >
-              <Text style={styles.segmentText}>色块</Text>
+              <Text style={styles.segmentText}>点选</Text>
             </Pressable>
           </View>
         ) : null}
@@ -556,10 +553,12 @@ export default function Index() {
         </Text>
       </ScrollView>
 
-      <RegionPicker
-        visible={regionPickerVisible}
-        imageBase64={originalBase64}
-        onClose={() => setRegionPickerVisible(false)}
+      <PointSegmentPicker
+        visible={pointPickerVisible}
+        imageUri={originalUri}
+        width={sourceSize?.width ?? 0}
+        height={sourceSize?.height ?? 0}
+        onClose={() => setPointPickerVisible(false)}
       />
     </SafeAreaView>
   );

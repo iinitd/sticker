@@ -27,9 +27,9 @@ concurrency:
 
 jobs:
   build:
-    # SDK 58 needs Xcode 26.4+. GitHub's macOS 26 image ships Xcode 26.x;
-    # the version check below fails early if the image is older.
-    runs-on: macos-26
+    # Point segmentation uses GenerateIterativeSegmentationRequest, which needs
+    # the iOS 27 SDK. GitHub's xcode-27 image runs on macOS 27 arm64.
+    runs-on: xcode-27
     timeout-minutes: 120
 
     steps:
@@ -47,8 +47,8 @@ jobs:
           major="${version%%.*}"
           rest="${version#*.}"
           minor="${rest%%.*}"
-          if [ "$major" -lt 26 ] || { [ "$major" -eq 26 ] && [ "$minor" -lt 4 ]; }; then
-            echo "Sticker SDK 58 requires Xcode 26.4 or newer; this runner has Xcode $version."
+          if [ "$major" -lt 27 ]; then
+            echo "Point segmentation requires Xcode 27 or newer; this runner has Xcode $version."
             exit 1
           fi
 
@@ -59,6 +59,9 @@ jobs:
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           BUILD_MESSAGE: ${{ inputs.message || github.ref_name }}
+          # Xcode 27 precompiled ExpoModulesCore has had Swift runtime symbol
+          # mismatches; build the modules from source on this toolchain.
+          EXPO_USE_PRECOMPILED_MODULES: "0"
         run: |
           npx eas-cli@latest build \
             --local \

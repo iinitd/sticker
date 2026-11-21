@@ -9,6 +9,14 @@ class StickerVisionModule extends NativeModule<{}> {
   ): Promise<{ uri: string; mode: "person" | "general" | "general-fallback" }> {
     throw new Error("图片转贴纸目前只支持 iOS 真机。");
   }
+
+  async segmentAtPointAsync(
+    _uri: string,
+    _x: number,
+    _y: number,
+  ): Promise<{ uri: string; width: number; height: number }> {
+    throw new Error("点选分割需要 iOS 27 真机。");
+  }
 }
 
 export default registerWebModule(StickerVisionModule, "StickerVision");

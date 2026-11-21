@@ -69,11 +69,11 @@ eas.json                EAS 构建 profile
 
 改这些值只需要 JS 热更新，不用重新打包；只有改 Swift 方法签名或处理流程才需要重新构建。
 
-首页的「微调」面板直接改 `edgeGrowRatio`、`borderWidthRatio`、`closeHoleRatio` 三项，松手后重新调用原生模块。边缘软化和局部框选重抠需要原生支持，还没做。
+首页的「微调」面板直接改 `edgeGrowRatio`、`borderWidthRatio`、`closeHoleRatio` 三项，松手后重新调用原生模块。
 
 「抠图」在通用和人物之间切换：人物模式走 `VNGeneratePersonSegmentationRequest`，优先保留完整人体和手，适合人像；手里拿的东西可能被排除。
 
-「选区」是纯 JS 的原图网格：6×6 格子，点选后把对应原图区域叠在贴纸预览下面，用来看补回缺失区域的效果。目前只影响预览，导出成 PNG 还没接。
+「点选」走 iOS 27 的 `GenerateIterativeSegmentationRequest`：在照片上点一下目标，系统按对象边缘返回蒙版。第一次使用需要联网下载系统分割模型，之后离线。当前只显示选中区域，还没和主抠图合并、也没接导出；构建需要 Xcode 27。
 
 ## 配置说明
 

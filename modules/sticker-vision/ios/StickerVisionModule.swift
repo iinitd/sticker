@@ -9,6 +9,12 @@ struct StickerResult: Record {
   @Field var mode: String = "general"
 }
 
+struct PointMaskResult: Record {
+  @Field var uri: String = ""
+  @Field var width: Double = 0
+  @Field var height: Double = 0
+}
+
 struct StickerOptions: Record {
   @Field var outputSize: Int = 1024
   @Field var maxDimension: Int = 1600
@@ -69,6 +75,21 @@ public class StickerVisionModule: Module {
         : (options.usePersonMatte ? "general-fallback" : "general")
 
       return StickerResult(uri: outputURL.absoluteString, mode: mode)
+    }
+
+    AsyncFunction("segmentAtPointAsync") { (uri: String, x: Double, y: Double, promise: Promise) in
+      Task {
+        do {
+          guard #available(iOS 27.0, *) else {
+            throw Exception(name: "UnsupportedOS", description: "点选分割需要 iOS 27。")
+          }
+
+          let result = try await Self.segmentAtPoint(uri: uri, x: x, y: y)
+          promise.resolve(result)
+        } catch {
+          promise.reject("POINT_SEGMENT_FAILED", error.localizedDescription)
+        }
+      }
     }
   }
 
@@ -158,6 +179,89 @@ public class StickerVisionModule: Module {
     }
 
     return (UIImage(cgImage: resultImage, scale: 1, orientation: .up), usedPerson)
+  }
+
+  @available(iOS 27.0, *)
+  private static func segmentAtPoint(uri: String, x: Double, y: Double) async throws -> PointMaskResult {
+    guard let url = URL(string: uri), url.isFileURL else {
+      throw Exception(name: "InvalidImageURI", description: "图片地址无效。")
+    }
+
+    let data: Data
+    do {
+      data = try Data(contentsOf: url)
+    } catch {
+      throw Exception(name: "ImageReadFailed", description: "读取图片失败。")
+    }
+
+    guard let source = Self.downsample(data: data, maxDimension: 1600),
+          let cgImage = source.cgImage else {
+      throw Exception(name: "InvalidImage", description: "无法解析这张图片。")
+    }
+
+    let handler = ImageRequestHandler(cgImage: cgImage, orientation: .up)
+    let point = NormalizedPoint(
+      x: CGFloat(min(max(x, 0), 1)),
+      y: CGFloat(1 - min(max(y, 0), 1))
+    )
+    let request = GenerateIterativeSegmentationRequest(seedPoint: point)
+
+    switch await request.assetStatus {
+    case .ready:
+      break
+    case .notReady:
+      try await request.downloadAssets()
+    case .downloading, .error:
+      throw Exception(name: "ModelNotReady", description: "分割模型还没准备好，稍后再试。")
+    @unknown default:
+      throw Exception(name: "ModelNotReady", description: "分割模型状态未知。")
+    }
+
+    guard let observation = try await handler.perform(request),
+          let maskBuffer = observation.pixelBuffer else {
+      throw Exception(name: "NoMask", description: "这个位置没有分割出区域，换一个点试试。")
+    }
+
+    let extent = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
+    let rawMask = CIImage(cvPixelBuffer: maskBuffer)
+    let scaledMask = rawMask.transformed(
+      by: CGAffineTransform(
+        scaleX: extent.width / rawMask.extent.width,
+        y: extent.height / rawMask.extent.height
+      )
+    )
+    let white = CIImage(color: CIColor.white).cropped(to: extent)
+
+    guard let filter = CIFilter(name: "CIBlendWithMask") else {
+      throw Exception(name: "FilterUnavailable", description: "系统抠图滤镜不可用。")
+    }
+
+    filter.setValue(white, forKey: kCIInputImageKey)
+    filter.setValue(CIImage.empty(), forKey: kCIInputBackgroundImageKey)
+    filter.setValue(scaledMask, forKey: kCIInputMaskImageKey)
+
+    guard let output = filter.outputImage else {
+      throw Exception(name: "MaskFailed", description: "生成选区失败。")
+    }
+
+    let context = CIContext(options: [.useSoftwareRenderer: false])
+    guard let rendered = context.createCGImage(output, from: extent) else {
+      throw Exception(name: "MaskFailed", description: "生成选区失败。")
+    }
+
+    guard let png = UIImage(cgImage: rendered).pngData() else {
+      throw Exception(name: "EncodingFailed", description: "生成选区图片失败。")
+    }
+
+    let outputURL = FileManager.default.temporaryDirectory
+      .appendingPathComponent("point-mask-\(UUID().uuidString).png")
+    try png.write(to: outputURL)
+
+    return PointMaskResult(
+      uri: outputURL.absoluteString,
+      width: Double(cgImage.width),
+      height: Double(cgImage.height)
+    )
   }
 
   private static func mainPersonMask(handler: VNImageRequestHandler, extent: CGRect) -> CIImage? {
