@@ -168,19 +168,6 @@ export default function Index() {
     }
   }, [originalUri, renderSticker]);
 
-  const setPersonMode = useCallback(
-    (enabled: boolean) => {
-      const next = { ...optionsRef.current, usePersonMatte: enabled };
-      optionsRef.current = next;
-      setOptions(next);
-
-      if (originalUri) {
-        void renderSticker(originalUri, next);
-      }
-    },
-    [originalUri, renderSticker],
-  );
-
   const toggleCell = useCallback((index: number) => {
     setSelectedCells((previous) => {
       const next = new Set(previous);
@@ -432,55 +419,9 @@ export default function Index() {
               </Pressable>
             </View>
 
-            <View style={styles.modeRow}>
-              <Text style={styles.modeLabel}>抠图</Text>
-              <View style={styles.modeOptions}>
-                <Pressable
-                  disabled={busy}
-                  onPress={() => setPersonMode(false)}
-                  style={[
-                    styles.modeOption,
-                    !options.usePersonMatte ? styles.modeOptionActive : null,
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.modeText,
-                      !options.usePersonMatte ? styles.modeTextActive : null,
-                    ]}
-                  >
-                    通用
-                  </Text>
-                </Pressable>
-                <Pressable
-                  disabled={busy}
-                  onPress={() => setPersonMode(true)}
-                  style={[
-                    styles.modeOption,
-                    options.usePersonMatte ? styles.modeOptionActive : null,
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.modeText,
-                      options.usePersonMatte ? styles.modeTextActive : null,
-                    ]}
-                  >
-                    人物
-                  </Text>
-                </Pressable>
-              </View>
-            </View>
-
             {renderMode ? (
               <Text style={styles.renderMode}>
-                {renderMode === "person"
-                  ? "本次：人物模式"
-                  : renderMode === "general-fallback"
-                    ? "人物模式未识别人体，已回退通用"
-                    : renderMode === "point"
-                      ? "本次：点选补图"
-                      : "本次：通用模式"}
+                {renderMode === "point" ? "本次：点选补图" : "本次：自动抠图"}
               </Text>
             ) : null}
 
@@ -524,7 +465,7 @@ export default function Index() {
 
             <Text style={styles.adjustHint}>
               松手后重新生成，约 1
-              秒；数值按 1000px 参考边长。人物模式优先保留完整人体，手里物体可能被排除。
+              秒；数值按 1000px 参考边长。
             </Text>
           </View>
         ) : null}
@@ -766,40 +707,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
     color: THEME.colors.primary,
-  },
-  modeRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  modeLabel: {
-    fontFamily: THEME.fonts.sans,
-    fontSize: 13,
-    color: THEME.colors.textSecondary,
-  },
-  modeOptions: {
-    flexDirection: "row",
-    padding: 2,
-    borderRadius: THEME.radii.full,
-    backgroundColor: THEME.colors.surface,
-    gap: 2,
-  },
-  modeOption: {
-    paddingHorizontal: THEME.spacing.md,
-    paddingVertical: THEME.spacing.xs,
-    borderRadius: THEME.radii.full,
-  },
-  modeOptionActive: {
-    backgroundColor: THEME.colors.background,
-  },
-  modeText: {
-    fontFamily: THEME.fonts.sans,
-    fontSize: 12,
-    color: THEME.colors.textSecondary,
-  },
-  modeTextActive: {
-    color: THEME.colors.primary,
-    fontWeight: "600",
   },
   reset: {
     fontFamily: THEME.fonts.sans,

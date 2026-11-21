@@ -60,3 +60,4 @@ archived:
 - 2026-11-21 上 iOS 27 点选分割：新增 `segmentAtPointAsync`，用 `GenerateIterativeSegmentationRequest` 按点击位置返回对象蒙版；构建切到 GitHub `xcode-27` runner（arm64 macOS 27 / Xcode 27），并在 CI 里关闭预编译 Expo 模块以避开 Xcode 27 的 Swift 符号问题。
 - 2026-11-21 原生能力批次：`applyPointsAsync`（多点/加减点合并）、`exportStickerAsync`（240 PNG/JPG）、`videoFramesAsync`（视频取帧）、`encodeGifAsync`（GIF 编码）；依赖加 `expo-camera`、`expo-media-library`、`expo-sharing`，权限写进 `app.json`。交互后续在 JS 里定。
 - 网络边界：App 不接后端、不做账号、不上传图片；唯一网络请求是 iOS 27 Vision 首次下载 Apple 系统分割模型。ICP 走离线工具豁免申请，不批再补个人备案。
+- 2026-11-22 移除「人物模式」UI：实测对补手没有帮助，主流程收敛为“通用自动抠图 + 点选补充/排除”。`VNGeneratePersonSegmentationRequest` 分支保留在原生模块里但不再暴露。

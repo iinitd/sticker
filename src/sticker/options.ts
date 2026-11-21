@@ -17,9 +17,6 @@ export const STICKER_RENDER_OPTIONS = {
   closeHoleRatio: 0.0025,
   // Transparent padding around the sticker inside the square.
   insetRatio: 0.03,
-  // Use the person matte instead of the general foreground mask. Better for
-  // full-body portraits and hands, but not for pets or standalone objects.
-  usePersonMatte: false,
 } as const;
 
 export type StickerRenderOptions = {
@@ -29,5 +26,4 @@ export type StickerRenderOptions = {
   edgeGrowRatio?: number;
   closeHoleRatio?: number;
   insetRatio?: number;
-  usePersonMatte?: boolean;
 };
