@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -39,9 +39,21 @@ export function PointSegmentPicker({
   const [point, setPoint] = useState<{ x: number; y: number } | null>(null);
   const [loading, setLoading] = useState(false);
   const [applying, setApplying] = useState(false);
+  const [downloadProgress, setDownloadProgress] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [stageWidth, setStageWidth] = useState(0);
   const [stageHeight, setStageHeight] = useState(0);
+
+  useEffect(() => {
+    const subscription = StickerVision.addListener(
+      "onPointModelDownloadProgress",
+      ({ progress }) => {
+        setDownloadProgress(progress);
+      },
+    );
+
+    return () => subscription.remove();
+  }, []);
 
   const onTap = async (locationX: number, locationY: number) => {
     if (!imageUri || stageWidth <= 0 || stageHeight <= 0 || loading) {
@@ -55,6 +67,7 @@ export function PointSegmentPicker({
 
     setPoint(nextPoint);
     setLoading(true);
+    setDownloadProgress(null);
     setError(null);
     setMaskUri(null);
 
@@ -73,6 +86,7 @@ export function PointSegmentPicker({
       );
     } finally {
       setLoading(false);
+      setDownloadProgress(null);
     }
   };
 
@@ -159,10 +173,36 @@ export function PointSegmentPicker({
               />
               {loading ? (
                 <View style={styles.busyOverlay}>
-                  <ActivityIndicator color={THEME.colors.accent} />
-                  <Text style={styles.busyText}>
-                    正在分割，第一次会下载系统模型…
-                  </Text>
+                  {downloadProgress !== null ? (
+                    <>
+                      <Text style={styles.busyText}>
+                        首次使用，正在下载系统分割模型
+                      </Text>
+                      <View style={styles.progressTrack}>
+                        <View
+                          style={[
+                            styles.progressFill,
+                            {
+                              width: `${Math.round(
+                                Math.min(1, Math.max(0, downloadProgress)) * 100,
+                              )}%`,
+                            },
+                          ]}
+                        />
+                      </View>
+                      <Text style={styles.progressText}>
+                        {Math.round(
+                          Math.min(1, Math.max(0, downloadProgress)) * 100,
+                        )}
+                        %
+                      </Text>
+                    </>
+                  ) : (
+                    <>
+                      <ActivityIndicator color={THEME.colors.accent} />
+                      <Text style={styles.busyText}>正在分割…</Text>
+                    </>
+                  )}
                 </View>
               ) : null}
             </View>
@@ -284,6 +324,23 @@ const styles = StyleSheet.create({
     fontSize: 13,
     textAlign: "center",
     color: THEME.colors.textSecondary,
+  },
+  progressTrack: {
+    width: "80%",
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: THEME.colors.surface,
+    overflow: "hidden",
+  },
+  progressFill: {
+    height: "100%",
+    borderRadius: 3,
+    backgroundColor: THEME.colors.accent,
+  },
+  progressText: {
+    fontFamily: THEME.fonts.mono,
+    fontSize: 12,
+    color: THEME.colors.textMuted,
   },
   errorBox: {
     padding: THEME.spacing.md,

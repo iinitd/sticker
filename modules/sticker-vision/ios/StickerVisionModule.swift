@@ -25,9 +25,11 @@ struct StickerOptions: Record, @unchecked Sendable {
   @Field var usePersonMatte: Bool = false
 }
 
-public class StickerVisionModule: Module {
+public class StickerVisionModule: Module, @unchecked Sendable {
   public func definition() -> ModuleDefinition {
     Name("StickerVision")
+
+    Events("onPointModelDownloadProgress")
 
     AsyncFunction("makeStickerAsync") { (uri: String, options: StickerOptions) throws -> StickerResult in
       guard let url = URL(string: uri), url.isFileURL else {
@@ -84,7 +86,15 @@ public class StickerVisionModule: Module {
             throw Exception(name: "UnsupportedOS", description: "点选分割需要 iOS 27。")
           }
 
-          let result = try await Self.segmentAtPoint(uri: uri, x: x, y: y)
+          let onProgress: @Sendable (Double) -> Void = { [weak self] value in
+            self?.sendEvent("onPointModelDownloadProgress", ["progress": value])
+          }
+          let result = try await Self.segmentAtPoint(
+            uri: uri,
+            x: x,
+            y: y,
+            onProgress: onProgress
+          )
           promise.resolve(result)
         } catch {
           promise.reject("POINT_SEGMENT_FAILED", error.localizedDescription)
@@ -99,7 +109,16 @@ public class StickerVisionModule: Module {
             throw Exception(name: "UnsupportedOS", description: "点选分割需要 iOS 27。")
           }
 
-          let result = try await Self.applyPoint(uri: uri, x: x, y: y, options: options)
+          let onProgress: @Sendable (Double) -> Void = { [weak self] value in
+            self?.sendEvent("onPointModelDownloadProgress", ["progress": value])
+          }
+          let result = try await Self.applyPoint(
+            uri: uri,
+            x: x,
+            y: y,
+            options: options,
+            onProgress: onProgress
+          )
           promise.resolve(result)
         } catch {
           promise.reject("POINT_APPLY_FAILED", error.localizedDescription)
@@ -221,7 +240,12 @@ public class StickerVisionModule: Module {
   }
 
   @available(iOS 27.0, *)
-  private static func iterativeMask(from image: UIImage, x: Double, y: Double) async throws -> CIImage {
+  private static func iterativeMask(
+    from image: UIImage,
+    x: Double,
+    y: Double,
+    onProgress: (@Sendable (Double) -> Void)? = nil
+  ) async throws -> CIImage {
     guard let cgImage = image.cgImage else {
       throw Exception(name: "InvalidImage", description: "无法读取图片像素。")
     }
@@ -237,7 +261,26 @@ public class StickerVisionModule: Module {
     case .ready:
       break
     case .notReady:
-      try await request.downloadAssets()
+      if let onProgress {
+        let manager = ProgressManager(totalCount: 100)
+        let monitor = Task {
+          while !Task.isCancelled {
+            onProgress(manager.fractionCompleted)
+            try? await Task.sleep(for: .milliseconds(200))
+          }
+        }
+
+        do {
+          try await request.downloadAssets(progress: manager.subprogress(assigningCount: 100))
+          monitor.cancel()
+          onProgress(1.0)
+        } catch {
+          monitor.cancel()
+          throw error
+        }
+      } else {
+        try await request.downloadAssets()
+      }
     case .downloading, .error:
       throw Exception(name: "ModelNotReady", description: "分割模型还没准备好，稍后再试。")
     @unknown default:
@@ -259,7 +302,12 @@ public class StickerVisionModule: Module {
   }
 
   @available(iOS 27.0, *)
-  private static func segmentAtPoint(uri: String, x: Double, y: Double) async throws -> PointMaskResult {
+  private static func segmentAtPoint(
+    uri: String,
+    x: Double,
+    y: Double,
+    onProgress: (@Sendable (Double) -> Void)? = nil
+  ) async throws -> PointMaskResult {
     guard let url = URL(string: uri), url.isFileURL else {
       throw Exception(name: "InvalidImageURI", description: "图片地址无效。")
     }
@@ -276,7 +324,12 @@ public class StickerVisionModule: Module {
       throw Exception(name: "InvalidImage", description: "无法解析这张图片。")
     }
 
-    let mask = try await Self.iterativeMask(from: source, x: x, y: y)
+    let mask = try await Self.iterativeMask(
+      from: source,
+      x: x,
+      y: y,
+      onProgress: onProgress
+    )
     let extent = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
     let white = CIImage(color: CIColor.white).cropped(to: extent)
 
@@ -317,7 +370,8 @@ public class StickerVisionModule: Module {
     uri: String,
     x: Double,
     y: Double,
-    options: StickerOptions
+    options: StickerOptions,
+    onProgress: (@Sendable (Double) -> Void)? = nil
   ) async throws -> StickerResult {
     guard let url = URL(string: uri), url.isFileURL else {
       throw Exception(name: "InvalidImageURI", description: "图片地址无效。")
@@ -342,7 +396,12 @@ public class StickerVisionModule: Module {
       throw Exception(name: "NoSubject", description: "没有识别到主体，换一张照片试试。")
     }
 
-    let pointMask = try await Self.iterativeMask(from: source, x: x, y: y)
+    let pointMask = try await Self.iterativeMask(
+      from: source,
+      x: x,
+      y: y,
+      onProgress: onProgress
+    )
     guard let union = CIFilter(name: "CIMaximumCompositing") else {
       throw Exception(name: "MaskFailed", description: "合并选区失败。")
     }

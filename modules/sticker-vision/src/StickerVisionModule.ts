@@ -13,7 +13,11 @@ export type PointMaskResult = {
   height: number;
 };
 
-declare class StickerVisionModule extends NativeModule<{}> {
+export type StickerVisionEvents = {
+  onPointModelDownloadProgress: (event: { progress: number }) => void;
+};
+
+declare class StickerVisionModule extends NativeModule<StickerVisionEvents> {
   makeStickerAsync(
     uri: string,
     options: StickerRenderOptions,
