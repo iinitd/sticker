@@ -73,6 +73,8 @@ eas.json                EAS 构建 profile
 
 「抠图」在通用和人物之间切换：人物模式走 `VNGeneratePersonSegmentationRequest`，优先保留完整人体和手，适合人像；手里拿的东西可能被排除。
 
+「选区」是纯 JS 的原图网格：6×6 格子，点选后把对应原图区域叠在贴纸预览下面，用来看补回缺失区域的效果。目前只影响预览，导出成 PNG 还没接。
+
 ## 配置说明
 
 - **开发版与 TestFlight 版共存**：EAS 的 `development` profile 设置 `APP_VARIANT=dev`，`app.config.js` 据此改用 `lol.milio.sticker.dev` 和 `Sticker Dev`。

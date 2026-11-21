@@ -20,6 +20,8 @@ import {
 import { THEME } from "@/theme";
 
 const CHECKER_CELLS = Array.from({ length: 100 }, (_, index) => index);
+const GRID_COLS = 6;
+const GRID_ROWS = 6;
 
 function Checkerboard() {
   return (
@@ -44,6 +46,15 @@ export default function Index() {
   const [originalUri, setOriginalUri] = useState<string | null>(null);
   const [stickerUri, setStickerUri] = useState<string | null>(null);
   const [showOriginal, setShowOriginal] = useState(false);
+  const [selecting, setSelecting] = useState(false);
+  const [selectedCells, setSelectedCells] = useState<Set<number>>(
+    () => new Set(),
+  );
+  const [sourceSize, setSourceSize] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
+  const [previewWidth, setPreviewWidth] = useState(0);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [renderMode, setRenderMode] = useState<
@@ -113,6 +124,20 @@ export default function Index() {
     setStickerUri(null);
     setRenderMode(null);
     setShowOriginal(false);
+    setSelecting(false);
+    setSelectedCells(new Set());
+
+    if (asset.width && asset.height) {
+      setSourceSize({ width: asset.width, height: asset.height });
+    } else {
+      setSourceSize(null);
+      Image.getSize(
+        asset.uri,
+        (width, height) => setSourceSize({ width, height }),
+        () => setSourceSize(null),
+      );
+    }
+
     await renderSticker(asset.uri, optionsRef.current);
   }, [renderSticker]);
 
@@ -154,7 +179,40 @@ export default function Index() {
     [originalUri, renderSticker],
   );
 
-  const visibleUri = showOriginal ? originalUri : stickerUri;
+  const toggleCell = useCallback((index: number) => {
+    setSelectedCells((previous) => {
+      const next = new Set(previous);
+
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+
+      return next;
+    });
+  }, []);
+
+  const clearSelection = useCallback(() => {
+    setSelectedCells(new Set());
+  }, []);
+
+  const stageWidth = Math.max(0, previewWidth - 2);
+  const inset = stageWidth * (options.insetRatio ?? 0.03);
+  const imageArea = Math.max(0, stageWidth - inset * 2);
+  const fitScale = sourceSize
+    ? Math.min(imageArea / sourceSize.width, imageArea / sourceSize.height)
+    : 1;
+  const fittedWidth = sourceSize ? sourceSize.width * fitScale : imageArea;
+  const fittedHeight = sourceSize ? sourceSize.height * fitScale : imageArea;
+  const fittedLeft = inset + (imageArea - fittedWidth) / 2;
+  const fittedTop = inset + (imageArea - fittedHeight) / 2;
+  const cellWidth = fittedWidth / GRID_COLS;
+  const cellHeight = fittedHeight / GRID_ROWS;
+  const hasGeometry = previewWidth > 0 && sourceSize !== null;
+
+  const stickerVisible = !showOriginal && !selecting && stickerUri !== null;
+  const sourceVisible = (showOriginal || selecting) && originalUri !== null;
   const hasResult = stickerUri !== null;
 
   return (
@@ -171,21 +229,109 @@ export default function Index() {
           </Text>
         </View>
 
-        <View style={styles.preview}>
+        <View
+          style={styles.preview}
+          onLayout={(event) => setPreviewWidth(event.nativeEvent.layout.width)}
+        >
           <Checkerboard />
 
-          {visibleUri ? (
-            <Image
-              source={{ uri: visibleUri }}
-              style={styles.previewImage}
-              resizeMode="contain"
-            />
+          {stickerVisible && stickerUri ? (
+            <>
+              {hasGeometry && originalUri
+                ? [...selectedCells].map((index) => {
+                    const column = index % GRID_COLS;
+                    const row = Math.floor(index / GRID_COLS);
+
+                    return (
+                      <View
+                        key={`region-${index}`}
+                        style={[
+                          styles.regionPatch,
+                          {
+                            left: fittedLeft + column * cellWidth,
+                            top: fittedTop + row * cellHeight,
+                            width: cellWidth,
+                            height: cellHeight,
+                          },
+                        ]}
+                      >
+                        <Image
+                          source={{ uri: originalUri }}
+                          style={{
+                            position: "absolute",
+                            left: -column * cellWidth,
+                            top: -row * cellHeight,
+                            width: fittedWidth,
+                            height: fittedHeight,
+                          }}
+                          resizeMode="stretch"
+                        />
+                      </View>
+                    );
+                  })
+                : null}
+
+              <Image
+                source={{ uri: stickerUri }}
+                style={styles.previewImage}
+                resizeMode="contain"
+              />
+            </>
+          ) : sourceVisible && originalUri ? (
+            hasGeometry ? (
+              <Image
+                source={{ uri: originalUri }}
+                style={{
+                  position: "absolute",
+                  left: fittedLeft,
+                  top: fittedTop,
+                  width: fittedWidth,
+                  height: fittedHeight,
+                }}
+                resizeMode="stretch"
+              />
+            ) : (
+              <Image
+                source={{ uri: originalUri }}
+                style={styles.previewImage}
+                resizeMode="contain"
+              />
+            )
           ) : (
             <View style={styles.placeholder}>
               <View style={styles.placeholderShape} />
               <Text style={styles.placeholderText}>选一张照片开始</Text>
             </View>
           )}
+
+          {selecting && hasGeometry ? (
+            <View
+              style={[
+                styles.grid,
+                {
+                  left: fittedLeft,
+                  top: fittedTop,
+                  width: fittedWidth,
+                  height: fittedHeight,
+                },
+              ]}
+            >
+              {Array.from({ length: GRID_COLS * GRID_ROWS }, (_, index) => (
+                <Pressable
+                  key={index}
+                  disabled={busy}
+                  onPress={() => toggleCell(index)}
+                  style={[
+                    styles.gridCell,
+                    { width: cellWidth, height: cellHeight },
+                    selectedCells.has(index)
+                      ? styles.gridCellSelected
+                      : null,
+                  ]}
+                />
+              ))}
+            </View>
+          ) : null}
 
           {busy ? (
             <View style={styles.busyOverlay}>
@@ -195,26 +341,52 @@ export default function Index() {
           ) : null}
         </View>
 
+        {hasResult && (selecting || selectedCells.size > 0) ? (
+          <View style={styles.selectBar}>
+            <View style={styles.selectInfo}>
+              <Text style={styles.selectText}>
+                {selecting
+                  ? `点格子补回缺失区域 · 已选 ${selectedCells.size} 块`
+                  : `已选 ${selectedCells.size} 块区域`}
+              </Text>
+              <Text style={styles.selectNote}>
+                选区目前只影响预览，导出还没接。
+              </Text>
+            </View>
+            <Pressable hitSlop={8} onPress={clearSelection}>
+              <Text style={styles.selectClear}>清空</Text>
+            </Pressable>
+          </View>
+        ) : null}
+
         {hasResult ? (
           <View style={styles.segmented}>
             <Pressable
-              onPress={() => setShowOriginal(false)}
+              onPress={() => {
+                setShowOriginal(false);
+                setSelecting(false);
+              }}
               style={[
                 styles.segment,
-                !showOriginal ? styles.segmentActive : null,
+                !showOriginal && !selecting ? styles.segmentActive : null,
               ]}
             >
               <Text
                 style={[
                   styles.segmentText,
-                  !showOriginal ? styles.segmentTextActive : null,
+                  !showOriginal && !selecting
+                    ? styles.segmentTextActive
+                    : null,
                 ]}
               >
                 贴纸
               </Text>
             </Pressable>
             <Pressable
-              onPress={() => setShowOriginal(true)}
+              onPress={() => {
+                setShowOriginal(true);
+                setSelecting(false);
+              }}
               style={[
                 styles.segment,
                 showOriginal ? styles.segmentActive : null,
@@ -227,6 +399,25 @@ export default function Index() {
                 ]}
               >
                 原图
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                setShowOriginal(false);
+                setSelecting(true);
+              }}
+              style={[
+                styles.segment,
+                selecting ? styles.segmentActive : null,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.segmentText,
+                  selecting ? styles.segmentTextActive : null,
+                ]}
+              >
+                选区
               </Text>
             </Pressable>
           </View>
@@ -443,6 +634,48 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     left: 0,
+  },
+  regionPatch: {
+    position: "absolute",
+    overflow: "hidden",
+  },
+  grid: {
+    position: "absolute",
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  gridCell: {
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: "rgba(24, 24, 27, 0.28)",
+  },
+  gridCellSelected: {
+    backgroundColor: "rgba(91, 91, 214, 0.28)",
+  },
+  selectBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: THEME.spacing.xs,
+  },
+  selectText: {
+    fontFamily: THEME.fonts.sans,
+    fontSize: 12,
+    color: THEME.colors.textSecondary,
+  },
+  selectNote: {
+    marginTop: 2,
+    fontFamily: THEME.fonts.sans,
+    fontSize: 11,
+    color: THEME.colors.textMuted,
+  },
+  selectInfo: {
+    flex: 1,
+    gap: 2,
+  },
+  selectClear: {
+    fontFamily: THEME.fonts.sans,
+    fontSize: 12,
+    color: THEME.colors.accent,
   },
   placeholder: {
     position: "absolute",
