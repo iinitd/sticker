@@ -645,7 +645,8 @@ public class StickerVisionModule: Module, @unchecked Sendable {
     let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
 
     if status == .notDetermined {
-      let granted = await withCheckedContinuation { continuation in
+      let granted: PHAuthorizationStatus = await withCheckedContinuation {
+        (continuation: CheckedContinuation<PHAuthorizationStatus, Never>) in
         PHPhotoLibrary.requestAuthorization(for: .readWrite) { result in
           continuation.resume(returning: result)
         }
@@ -674,7 +675,8 @@ public class StickerVisionModule: Module, @unchecked Sendable {
     let outputURL = FileManager.default.temporaryDirectory
       .appendingPathComponent("live-paired-\(UUID().uuidString).\(ext.isEmpty ? "mov" : ext)")
 
-    try await withCheckedThrowingContinuation { continuation in
+    try await withCheckedThrowingContinuation {
+      (continuation: CheckedContinuation<Void, Error>) in
       PHAssetResourceManager.default().writeData(
         for: resource,
         toFile: outputURL,
@@ -683,7 +685,7 @@ public class StickerVisionModule: Module, @unchecked Sendable {
         if let error {
           continuation.resume(throwing: error)
         } else {
-          continuation.resume()
+          continuation.resume(returning: ())
         }
       }
     }
