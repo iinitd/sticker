@@ -73,7 +73,7 @@ eas.json                EAS 构建 profile
 
 默认走通用前景抠图，点选作为补充。人物模式已从 UI 移除；原生人物分支保留但不再暴露。
 
-「点选」走 iOS 27 的 `GenerateIterativeSegmentationRequest`：打开时自动抠图作为底图区域一起显示，可以点它取消；点空白处新增区域，点已选区域取消。第一次使用需要联网下载系统分割模型，之后离线。构建需要 Xcode 27。
+「点选」走 iOS 27 的 `GenerateIterativeSegmentationRequest`。选完照片、自动抠图出结果后，预览区直接进入点选模式：自动抠图作为底图区域一起显示，可以点它取消；点空白处新增区域，点已选区域取消；点「应用到贴纸」合成。之后可以用预览上方的「贴纸 / 原图 / 点选」切换，回到点选时选区保留，换照片才清空。第一次使用需要联网下载系统分割模型，之后离线。构建需要 Xcode 27。
 
 原生批次还预置了这些能力：多点/加减点合并（`applyPointsAsync`）、240 导出（`exportStickerAsync`）、视频取帧（`videoFramesAsync`）、GIF 编码（`encodeGifAsync`）。相机、保存到相册、分享分别用 `expo-camera`、`expo-media-library`、`expo-sharing`，图片处理全在本地。
 

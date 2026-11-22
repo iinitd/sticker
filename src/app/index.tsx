@@ -11,19 +11,23 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import StickerVision from "@modules/sticker-vision";
+import StickerVision, {
+  type StickerRenderResult,
+} from "@modules/sticker-vision";
 import { LiveGifPicker } from "@/components/LiveGifPicker";
 import { ParameterSlider } from "@/components/ParameterSlider";
-import { PointSegmentPicker } from "@/components/PointSegmentPicker";
+import { PointSelectLayer } from "@/components/PointSelectLayer";
 import {
   STICKER_RENDER_OPTIONS,
   type StickerRenderOptions,
 } from "@/sticker/options";
+import {
+  usePointSelection,
+  type PointSelection,
+} from "@/sticker/usePointSelection";
 import { THEME } from "@/theme";
 
 const CHECKER_CELLS = Array.from({ length: 100 }, (_, index) => index);
-const GRID_COLS = 6;
-const GRID_ROWS = 6;
 
 function Checkerboard() {
   return (
@@ -48,16 +52,12 @@ export default function Index() {
   const [originalUri, setOriginalUri] = useState<string | null>(null);
   const [stickerUri, setStickerUri] = useState<string | null>(null);
   const [showOriginal, setShowOriginal] = useState(false);
-  const [selecting, setSelecting] = useState(false);
-  const [selectedCells, setSelectedCells] = useState<Set<number>>(
-    () => new Set(),
-  );
+  const [pointMode, setPointMode] = useState(false);
   const [sourceSize, setSourceSize] = useState<{
     width: number;
     height: number;
   } | null>(null);
   const [previewWidth, setPreviewWidth] = useState(0);
-  const [pointPickerVisible, setPointPickerVisible] = useState(false);
   const [liveGifVisible, setLiveGifVisible] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -69,6 +69,7 @@ export default function Index() {
   });
   const optionsRef = useRef(options);
   const requestID = useRef(0);
+  const appliedSelection = useRef<PointSelection | null>(null);
 
   const renderSticker = useCallback(
     async (uri: string, nextOptions: StickerRenderOptions) => {
@@ -79,7 +80,13 @@ export default function Index() {
       setError(null);
 
       try {
-        const raw = await StickerVision.makeStickerAsync(uri, nextOptions);
+        const selection = appliedSelection.current;
+        const raw = selection
+          ? await StickerVision.applyPointsAsync(uri, selection.points, {
+              ...nextOptions,
+              includeBase: selection.includeBase,
+            })
+          : await StickerVision.makeStickerAsync(uri, nextOptions);
         const resultUri = typeof raw === "string" ? raw : raw.uri;
         const resultMode = typeof raw === "string" ? null : raw.mode;
 
@@ -109,6 +116,25 @@ export default function Index() {
     [],
   );
 
+  const handlePointApplied = useCallback(
+    (result: StickerRenderResult, selection: PointSelection) => {
+      appliedSelection.current = selection;
+      setStickerUri(result.uri);
+      setRenderMode(result.mode);
+      setPointMode(false);
+      setShowOriginal(false);
+      setError(null);
+    },
+    [],
+  );
+
+  const point = usePointSelection({
+    imageUri: originalUri,
+    enabled: pointMode,
+    options,
+    onApplied: handlePointApplied,
+  });
+
   const pickImage = useCallback(async () => {
     setError(null);
 
@@ -124,12 +150,12 @@ export default function Index() {
     }
 
     const asset = result.assets[0];
+    appliedSelection.current = null;
     setOriginalUri(asset.uri);
     setStickerUri(null);
     setRenderMode(null);
     setShowOriginal(false);
-    setSelecting(false);
-    setSelectedCells(new Set());
+    setPointMode(false);
 
     if (asset.width && asset.height) {
       setSourceSize({ width: asset.width, height: asset.height });
@@ -143,6 +169,10 @@ export default function Index() {
     }
 
     await renderSticker(asset.uri, optionsRef.current);
+
+    // Land straight in the point editor with the automatic mask selected, so
+    // fixing gaps never needs an extra tap on "点选".
+    setPointMode(true);
   }, [renderSticker]);
 
   const updateOption = useCallback(
@@ -170,24 +200,6 @@ export default function Index() {
     }
   }, [originalUri, renderSticker]);
 
-  const toggleCell = useCallback((index: number) => {
-    setSelectedCells((previous) => {
-      const next = new Set(previous);
-
-      if (next.has(index)) {
-        next.delete(index);
-      } else {
-        next.add(index);
-      }
-
-      return next;
-    });
-  }, []);
-
-  const clearSelection = useCallback(() => {
-    setSelectedCells(new Set());
-  }, []);
-
   const stageWidth = Math.max(0, previewWidth - 2);
   const inset = stageWidth * (options.insetRatio ?? 0.03);
   const imageArea = Math.max(0, stageWidth - inset * 2);
@@ -198,13 +210,21 @@ export default function Index() {
   const fittedHeight = sourceSize ? sourceSize.height * fitScale : imageArea;
   const fittedLeft = inset + (imageArea - fittedWidth) / 2;
   const fittedTop = inset + (imageArea - fittedHeight) / 2;
-  const cellWidth = fittedWidth / GRID_COLS;
-  const cellHeight = fittedHeight / GRID_ROWS;
   const hasGeometry = previewWidth > 0 && sourceSize !== null;
 
-  const stickerVisible = !showOriginal && !selecting && stickerUri !== null;
-  const sourceVisible = (showOriginal || selecting) && originalUri !== null;
+  const stickerVisible = !showOriginal && !pointMode && stickerUri !== null;
   const hasResult = stickerUri !== null;
+  const stageBusy = busy || point.busy;
+  const stageLabel = point.applying
+    ? "正在应用到贴纸…"
+    : point.segmenting
+      ? point.downloadProgress !== null
+        ? "首次使用，正在下载系统分割模型"
+        : "正在分割…"
+      : point.baseLoading
+        ? "正在读取自动抠图…"
+        : "正在抠图…";
+  const message = error ?? point.error;
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -226,128 +246,146 @@ export default function Index() {
         >
           <Checkerboard />
 
-          {stickerVisible && stickerUri ? (
-            <>
-              {hasGeometry && originalUri
-                ? [...selectedCells].map((index) => {
-                    const column = index % GRID_COLS;
-                    const row = Math.floor(index / GRID_COLS);
-
-                    return (
-                      <View
-                        key={`region-${index}`}
-                        style={[
-                          styles.regionPatch,
-                          {
-                            left: fittedLeft + column * cellWidth,
-                            top: fittedTop + row * cellHeight,
-                            width: cellWidth,
-                            height: cellHeight,
-                          },
-                        ]}
-                      >
-                        <Image
-                          source={{ uri: originalUri }}
-                          style={{
-                            position: "absolute",
-                            left: -column * cellWidth,
-                            top: -row * cellHeight,
-                            width: fittedWidth,
-                            height: fittedHeight,
-                          }}
-                          resizeMode="stretch"
-                        />
-                      </View>
-                    );
-                  })
-                : null}
-
-              <Image
-                source={{ uri: stickerUri }}
-                style={styles.previewImage}
-                resizeMode="contain"
-              />
-            </>
-          ) : sourceVisible && originalUri ? (
-            hasGeometry ? (
-              <Image
-                source={{ uri: originalUri }}
-                style={{
-                  position: "absolute",
-                  left: fittedLeft,
-                  top: fittedTop,
-                  width: fittedWidth,
-                  height: fittedHeight,
-                }}
-                resizeMode="stretch"
-              />
-            ) : (
-              <Image
-                source={{ uri: originalUri }}
-                style={styles.previewImage}
-                resizeMode="contain"
-              />
-            )
-          ) : (
+          {!originalUri ? (
             <View style={styles.placeholder}>
               <View style={styles.placeholderShape} />
               <Text style={styles.placeholderText}>选一张照片开始</Text>
             </View>
+          ) : pointMode ? (
+            <>
+              {hasGeometry ? (
+                <Image
+                  source={{ uri: originalUri }}
+                  style={{
+                    position: "absolute",
+                    left: fittedLeft,
+                    top: fittedTop,
+                    width: fittedWidth,
+                    height: fittedHeight,
+                  }}
+                  resizeMode="stretch"
+                />
+              ) : (
+                <Image
+                  source={{ uri: originalUri }}
+                  style={styles.previewImage}
+                  resizeMode="contain"
+                />
+              )}
+
+              {hasGeometry ? (
+                <PointSelectLayer
+                  left={fittedLeft}
+                  top={fittedTop}
+                  width={fittedWidth}
+                  height={fittedHeight}
+                  regions={point.regions}
+                  disabled={stageBusy}
+                  onTap={point.toggleAt}
+                />
+              ) : null}
+            </>
+          ) : stickerVisible && stickerUri ? (
+            <Image
+              source={{ uri: stickerUri }}
+              style={styles.previewImage}
+              resizeMode="contain"
+            />
+          ) : hasGeometry ? (
+            <Image
+              source={{ uri: originalUri }}
+              style={{
+                position: "absolute",
+                left: fittedLeft,
+                top: fittedTop,
+                width: fittedWidth,
+                height: fittedHeight,
+              }}
+              resizeMode="stretch"
+            />
+          ) : (
+            <Image
+              source={{ uri: originalUri }}
+              style={styles.previewImage}
+              resizeMode="contain"
+            />
           )}
 
-          {selecting && hasGeometry ? (
-            <View
-              style={[
-                styles.grid,
-                {
-                  left: fittedLeft,
-                  top: fittedTop,
-                  width: fittedWidth,
-                  height: fittedHeight,
-                },
-              ]}
-            >
-              {Array.from({ length: GRID_COLS * GRID_ROWS }, (_, index) => (
-                <Pressable
-                  key={index}
-                  disabled={busy}
-                  onPress={() => toggleCell(index)}
-                  style={[
-                    styles.gridCell,
-                    { width: cellWidth, height: cellHeight },
-                    selectedCells.has(index)
-                      ? styles.gridCellSelected
-                      : null,
-                  ]}
-                />
-              ))}
-            </View>
-          ) : null}
-
-          {busy ? (
+          {stageBusy ? (
             <View style={styles.busyOverlay}>
               <ActivityIndicator color={THEME.colors.accent} />
-              <Text style={styles.busyText}>正在抠图…</Text>
+              <Text style={styles.busyText}>{stageLabel}</Text>
+              {point.segmenting && point.downloadProgress !== null ? (
+                <>
+                  <View style={styles.progressTrack}>
+                    <View
+                      style={[
+                        styles.progressFill,
+                        {
+                          width: `${Math.round(
+                            Math.min(1, Math.max(0, point.downloadProgress)) *
+                              100,
+                          )}%`,
+                        },
+                      ]}
+                    />
+                  </View>
+                  <Text style={styles.progressText}>
+                    {Math.round(
+                      Math.min(1, Math.max(0, point.downloadProgress)) * 100,
+                    )}
+                    %
+                  </Text>
+                </>
+              ) : null}
             </View>
           ) : null}
         </View>
 
-        {hasResult && (selecting || selectedCells.size > 0) ? (
-          <View style={styles.selectBar}>
-            <View style={styles.selectInfo}>
-              <Text style={styles.selectText}>
-                {selecting
-                  ? `点格子补回缺失区域 · 已选 ${selectedCells.size} 块`
-                  : `已选 ${selectedCells.size} 块区域`}
+        {pointMode ? (
+          <>
+            <View style={styles.pointBar}>
+              <Text style={styles.pointInfo}>
+                {point.regions.length > 0
+                  ? `已选 ${point.regions.length} 个区域${
+                      point.hasBase ? "（含自动底图）" : ""
+                    }`
+                  : "点主体补选区域，点已选区域取消"}
               </Text>
-              <Text style={styles.selectNote}>
-                选区目前只影响预览，导出还没接。
-              </Text>
+              {point.regions.length > 0 ? (
+                <Pressable
+                  disabled={point.busy}
+                  hitSlop={8}
+                  onPress={point.clear}
+                >
+                  <Text
+                    style={[
+                      styles.pointClear,
+                      point.busy ? styles.pointClearDisabled : null,
+                    ]}
+                  >
+                    清空
+                  </Text>
+                </Pressable>
+              ) : null}
             </View>
-            <Pressable hitSlop={8} onPress={clearSelection}>
-              <Text style={styles.selectClear}>清空</Text>
+
+            <Pressable
+              disabled={stageBusy || point.regions.length === 0}
+              onPress={() => void point.apply()}
+              style={({ pressed }) => [
+                styles.applyButton,
+                pressed ? styles.buttonPressed : null,
+                stageBusy || point.regions.length === 0
+                  ? styles.buttonDisabled
+                  : null,
+              ]}
+            >
+              <Text style={styles.applyButtonText}>
+                {point.applying ? "正在应用到贴纸…" : "应用到贴纸"}
+              </Text>
             </Pressable>
-          </View>
+          </>
         ) : null}
 
         {hasResult ? (
@@ -355,17 +393,17 @@ export default function Index() {
             <Pressable
               onPress={() => {
                 setShowOriginal(false);
-                setSelecting(false);
+                setPointMode(false);
               }}
               style={[
                 styles.segment,
-                !showOriginal && !selecting ? styles.segmentActive : null,
+                !showOriginal && !pointMode ? styles.segmentActive : null,
               ]}
             >
               <Text
                 style={[
                   styles.segmentText,
-                  !showOriginal && !selecting
+                  !showOriginal && !pointMode
                     ? styles.segmentTextActive
                     : null,
                 ]}
@@ -376,11 +414,11 @@ export default function Index() {
             <Pressable
               onPress={() => {
                 setShowOriginal(true);
-                setSelecting(false);
+                setPointMode(false);
               }}
               style={[
                 styles.segment,
-                showOriginal ? styles.segmentActive : null,
+                showOriginal && !pointMode ? styles.segmentActive : null,
               ]}
             >
               <Text
@@ -393,15 +431,28 @@ export default function Index() {
               </Text>
             </Pressable>
             <Pressable
-              onPress={() => setPointPickerVisible(true)}
-              style={styles.segment}
+              onPress={() => {
+                setShowOriginal(false);
+                setPointMode(true);
+              }}
+              style={[
+                styles.segment,
+                pointMode ? styles.segmentActive : null,
+              ]}
             >
-              <Text style={styles.segmentText}>点选</Text>
+              <Text
+                style={[
+                  styles.segmentText,
+                  pointMode ? styles.segmentTextActive : null,
+                ]}
+              >
+                点选
+              </Text>
             </Pressable>
           </View>
         ) : null}
 
-        {hasResult ? (
+        {hasResult && !pointMode ? (
           <View style={styles.adjustPanel}>
             <View style={styles.adjustHeader}>
               <Text style={styles.adjustTitle}>微调</Text>
@@ -472,9 +523,9 @@ export default function Index() {
           </View>
         ) : null}
 
-        {error ? (
+        {message ? (
           <View style={styles.errorBox}>
-            <Text style={styles.errorText}>{error}</Text>
+            <Text style={styles.errorText}>{message}</Text>
           </View>
         ) : null}
 
@@ -512,21 +563,6 @@ export default function Index() {
         visible={liveGifVisible}
         options={optionsRef.current}
         onClose={() => setLiveGifVisible(false)}
-      />
-
-      <PointSegmentPicker
-        visible={pointPickerVisible}
-        imageUri={originalUri}
-        width={sourceSize?.width ?? 0}
-        height={sourceSize?.height ?? 0}
-        options={optionsRef.current}
-        onApplied={(result) => {
-          setStickerUri(result.uri);
-          setRenderMode(result.mode);
-          setShowOriginal(false);
-          setPointPickerVisible(false);
-        }}
-        onClose={() => setPointPickerVisible(false)}
       />
     </SafeAreaView>
   );
@@ -600,47 +636,39 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
   },
-  regionPatch: {
-    position: "absolute",
-    overflow: "hidden",
-  },
-  grid: {
-    position: "absolute",
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
-  gridCell: {
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: "rgba(24, 24, 27, 0.28)",
-  },
-  gridCellSelected: {
-    backgroundColor: "rgba(91, 91, 214, 0.28)",
-  },
-  selectBar: {
+  pointBar: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    gap: THEME.spacing.md,
     paddingHorizontal: THEME.spacing.xs,
   },
-  selectText: {
+  pointInfo: {
+    flex: 1,
     fontFamily: THEME.fonts.sans,
     fontSize: 12,
     color: THEME.colors.textSecondary,
   },
-  selectNote: {
-    marginTop: 2,
-    fontFamily: THEME.fonts.sans,
-    fontSize: 11,
-    color: THEME.colors.textMuted,
-  },
-  selectInfo: {
-    flex: 1,
-    gap: 2,
-  },
-  selectClear: {
+  pointClear: {
     fontFamily: THEME.fonts.sans,
     fontSize: 12,
     color: THEME.colors.accent,
+  },
+  pointClearDisabled: {
+    opacity: 0.4,
+  },
+  applyButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: THEME.spacing.md + 2,
+    borderRadius: THEME.radii.lg,
+    backgroundColor: THEME.colors.primary,
+  },
+  applyButtonText: {
+    fontFamily: THEME.fonts.sans,
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#ffffff",
   },
   placeholder: {
     position: "absolute",
@@ -674,12 +702,31 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: THEME.spacing.sm,
-    backgroundColor: "rgba(255,255,255,0.72)",
+    padding: THEME.spacing.lg,
+    backgroundColor: "rgba(255,255,255,0.78)",
   },
   busyText: {
     fontFamily: THEME.fonts.sans,
-    fontSize: 14,
+    fontSize: 13,
+    textAlign: "center",
     color: THEME.colors.textSecondary,
+  },
+  progressTrack: {
+    width: "70%",
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: THEME.colors.surface,
+    overflow: "hidden",
+  },
+  progressFill: {
+    height: "100%",
+    borderRadius: 3,
+    backgroundColor: THEME.colors.accent,
+  },
+  progressText: {
+    fontFamily: THEME.fonts.mono,
+    fontSize: 12,
+    color: THEME.colors.textMuted,
   },
   segmented: {
     flexDirection: "row",

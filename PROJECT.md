@@ -5,6 +5,7 @@ created: 2026-11-17
 updated:
   - 2026-11-17
   - 2026-11-21
+  - 2026-11-22
 archived:
 ---
 
@@ -63,3 +64,4 @@ archived:
 - 2026-11-22 移除「人物模式」UI：实测对补手没有帮助，主流程收敛为“通用自动抠图 + 点选补充/排除”。`VNGeneratePersonSegmentationRequest` 分支保留在原生模块里但不再暴露。
 - 2026-11-22 点选改为魔法棒式：自动抠图作为初始区域显示，点已选区域取消，点空白新增；新增 `baseMaskAsync` 暴露自动蒙版，`applyPointsAsync` 支持 `includeBase`，可以只输出点选区域。
 - 2026-11-22 加「Live 动图」实验：`expo-image-picker` 选 `livePhotos`，取 `pairedVideoAsset`，`videoFramesAsync` 取 8fps/最多 20 帧，逐帧 `makeStickerAsync`，`encodeGifAsync` 合 240 GIF；无时序跟踪，保存/分享未接。
+- 2026-11-22 点选改成预览区默认态：选完照片自动抠图完成后直接进入点选模式，自动蒙版已经是选中状态，不再需要先点顶部「点选」。点选状态抽到 `usePointSelection`，全屏面板 `PointSegmentPicker` 删除，蒙版和点击层改成卡片内联渲染；之后调滑块会用上次应用的选区重渲染，不会退回纯自动抠图。
