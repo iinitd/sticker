@@ -61,10 +61,24 @@ export function LiveGifPicker({
       return;
     }
 
-    const pairedVideo = picked.assets[0].pairedVideoAsset;
+    const asset = picked.assets[0];
+    let videoUri = asset.pairedVideoAsset?.uri ?? null;
 
-    if (!pairedVideo) {
-      setError("这张不是 Live 图，或者系统没有返回配对视频。");
+    if (
+      !videoUri &&
+      asset.assetId &&
+      typeof StickerVision.pairedVideoAsync === "function"
+    ) {
+      try {
+        const fallback = await StickerVision.pairedVideoAsync(asset.assetId);
+        videoUri = fallback.uri;
+      } catch {
+        // The native fallback explains why it failed below.
+      }
+    }
+
+    if (!videoUri) {
+      setError("系统没有返回这张 Live 图的配对视频。");
       return;
     }
 
@@ -74,7 +88,7 @@ export function LiveGifPicker({
 
     try {
       const frames = await StickerVision.videoFramesAsync(
-        pairedVideo.uri,
+        videoUri,
         8,
         20,
       );

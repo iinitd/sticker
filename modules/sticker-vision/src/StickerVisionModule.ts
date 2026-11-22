@@ -70,6 +70,8 @@ declare class StickerVisionModule extends NativeModule<StickerVisionEvents> {
     options: StickerRenderOptions,
   ): Promise<PointMaskResult>;
 
+  pairedVideoAsync(assetId: string): Promise<FileResult>;
+
   exportStickerAsync(
     uri: string,
     size: number,

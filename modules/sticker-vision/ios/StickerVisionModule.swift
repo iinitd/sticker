@@ -4,6 +4,7 @@ import Vision
 import CoreImage
 import ImageIO
 import AVFoundation
+import Photos
 import UniformTypeIdentifiers
 
 struct StickerResult: Record {
@@ -185,6 +186,20 @@ public class StickerVisionModule: Module, @unchecked Sendable {
           promise.resolve(result)
         } catch {
           promise.reject("BASE_MASK_FAILED", error.localizedDescription)
+        }
+      }
+    }
+
+    AsyncFunction("pairedVideoAsync") { (assetId: String, promise: Promise) in
+      Task {
+        do {
+          guard #available(iOS 16.0, *) else {
+            throw Exception(name: "UnsupportedOS", description: "读取 Live 图需要 iOS 16。")
+          }
+          let result = try await Self.pairedVideo(assetId: assetId)
+          promise.resolve(result)
+        } catch {
+          promise.reject("LIVE_PHOTO_FAILED", error.localizedDescription)
         }
       }
     }
@@ -623,6 +638,59 @@ public class StickerVisionModule: Module, @unchecked Sendable {
       width: Double(cgImage.width),
       height: Double(cgImage.height)
     )
+  }
+
+  @available(iOS 16.0, *)
+  private static func pairedVideo(assetId: String) async throws -> FileResult {
+    let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+
+    if status == .notDetermined {
+      let granted = await withCheckedContinuation { continuation in
+        PHPhotoLibrary.requestAuthorization(for: .readWrite) { result in
+          continuation.resume(returning: result)
+        }
+      }
+
+      guard granted == .authorized || granted == .limited else {
+        throw Exception(name: "PhotoPermissionDenied", description: "需要相册权限才能读取 Live 图的配对视频。")
+      }
+    } else if status != .authorized && status != .limited {
+      throw Exception(name: "PhotoPermissionDenied", description: "需要相册权限才能读取 Live 图的配对视频。")
+    }
+
+    let assets = PHAsset.fetchAssets(withLocalIdentifiers: [assetId], options: nil)
+    guard let asset = assets.firstObject else {
+      throw Exception(name: "LivePhotoNotFound", description: "系统里找不到这张 Live 图。")
+    }
+    guard asset.mediaSubtypes.contains(.photoLive) else {
+      throw Exception(name: "NotLivePhoto", description: "这张图不是 Live Photo。")
+    }
+    guard let resource = PHAssetResource.assetResources(for: asset)
+      .first(where: { $0.type == .pairedVideo }) else {
+      throw Exception(name: "NoPairedVideo", description: "这张 Live 图没有配对视频。")
+    }
+
+    let ext = (resource.originalFilename as NSString).pathExtension
+    let outputURL = FileManager.default.temporaryDirectory
+      .appendingPathComponent("live-paired-\(UUID().uuidString).\(ext.isEmpty ? "mov" : ext)")
+
+    try await withCheckedThrowingContinuation { continuation in
+      PHAssetResourceManager.default().writeData(
+        for: resource,
+        toFile: outputURL,
+        options: nil
+      ) { error in
+        if let error {
+          continuation.resume(throwing: error)
+        } else {
+          continuation.resume()
+        }
+      }
+    }
+
+    let attributes = try FileManager.default.attributesOfItem(atPath: outputURL.path)
+    let bytes = (attributes[.size] as? NSNumber)?.intValue ?? 0
+    return FileResult(uri: outputURL.absoluteString, bytes: bytes)
   }
 
   private static func resizedCGImage(_ image: CGImage, side: Int, opaque: Bool) -> CGImage? {

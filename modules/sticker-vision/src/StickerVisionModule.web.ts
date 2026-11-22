@@ -28,6 +28,12 @@ class StickerVisionModule extends NativeModule<{}> {
     throw new Error("自动蒙版需要 iOS 真机。");
   }
 
+  async pairedVideoAsync(
+    _assetId: string,
+  ): Promise<{ uri: string; bytes: number }> {
+    throw new Error("Live 图需要 iOS 真机。");
+  }
+
   async applyPointAsync(
     _uri: string,
     _x: number,
