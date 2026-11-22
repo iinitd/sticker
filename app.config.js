@@ -15,6 +15,15 @@ module.exports = ({ config }) => {
     ios: {
       ...config.ios,
       bundleIdentifier: "lol.milio.sticker.dev",
+      // Dev client talks to Metro over the Tailscale/LAN address over plain HTTP.
+      // Keep this exception in the dev variant only; production keeps ATS on.
+      infoPlist: {
+        ...config.ios?.infoPlist,
+        NSAppTransportSecurity: {
+          ...config.ios?.infoPlist?.NSAppTransportSecurity,
+          NSAllowsArbitraryLoads: true,
+        },
+      },
     },
     android: {
       ...config.android,
